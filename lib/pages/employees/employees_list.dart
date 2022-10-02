@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scottmanager/pages/employees/employee.dart';
+import 'package:http/http.dart' as http;
 
 import '../../components/card_employee.dart';
 
@@ -11,6 +12,22 @@ class EmployeeList extends StatefulWidget {
 }
 
 class _EmployeeListState extends State<EmployeeList> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void getEmployeesList() async {
+    var url = Uri.https('example.com', 'whatsit/create');
+    var response =
+        await http.post(url, body: {'name': 'doodle', 'color': 'blue'});
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    print(await http.read(Uri.https('example.com', 'foobar.txt')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
