@@ -4,7 +4,7 @@ import 'package:scottmanager/pages/departments/department.dart';
 import '../../components/card_departments.dart';
 
 class DepartmentsList extends StatefulWidget {
-  const DepartmentsList({super.key});
+  const DepartmentsList();
 
   @override
   State<DepartmentsList> createState() => _DepartmentsListState();

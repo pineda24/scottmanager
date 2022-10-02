@@ -4,7 +4,7 @@ import 'package:scottmanager/pages/employees/employee.dart';
 import '../../components/card_employee.dart';
 
 class EmployeeList extends StatefulWidget {
-  const EmployeeList({super.key});
+  const EmployeeList();
 
   @override
   State<EmployeeList> createState() => _EmployeeListState();

@@ -6,7 +6,7 @@ import '../pages/employees/employee.dart';
 import '../pages/employees/employees_list.dart';
 
 class MenuTabs extends StatefulWidget {
-  const MenuTabs({super.key});
+  const MenuTabs();
 
   @override
   State<MenuTabs> createState() => _MenuTabsState();

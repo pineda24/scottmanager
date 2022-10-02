@@ -7,7 +7,7 @@ import '../../style/style.dart';
 class Employee extends StatefulWidget {
   String action;
 
-  Employee({super.key, required this.action});
+  Employee({required this.action});
 
   @override
   State<Employee> createState() => _EmployeeState();

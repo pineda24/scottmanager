@@ -6,7 +6,7 @@ import '../../style/style.dart';
 class Department extends StatefulWidget {
   String action;
 
-  Department({super.key, required this.action});
+  Department({required this.action});
 
   @override
   State<Department> createState() => _DepartmentState();
