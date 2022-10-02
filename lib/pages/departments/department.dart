@@ -25,7 +25,9 @@ class _DepartmentState extends State<Department> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'DEPARTAMENTO',
+          widget.action == 'create'
+              ? 'CREAR DEPARTAMENTO'
+              : 'EDITAR DEPARTAMENTO',
           style: Style.whiteNormalBoldText,
         ),
         backgroundColor: Style.primaryColorBold,

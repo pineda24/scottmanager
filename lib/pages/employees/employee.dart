@@ -18,6 +18,16 @@ class _EmployeeState extends State<Employee> {
       List.generate(7, (int index) => TextEditingController());
   DateTime _date = DateTime.now();
 
+  void getDataEdit() async {
+    var url = Uri.https('example.com', 'whatsit/create');
+    var response =
+        await http.post(url, body: {'name': 'doodle', 'color': 'blue'});
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
+    print(await http.read(Uri.https('example.com', 'foobar.txt')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +37,7 @@ class _EmployeeState extends State<Employee> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'EMPLEADOS',
+          widget.action == 'create' ? 'CREAR EMPLEADOS' : 'EDITAR EMPLEADOS',
           style: Style.whiteNormalBoldText,
         ),
         backgroundColor: Style.primaryColorBold,
