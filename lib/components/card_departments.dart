@@ -73,11 +73,11 @@ class _Card_departmentsState extends State<Card_departments> {
               iconListCont(context),
               Spacer(),
               Text(
-                "No.",
+                "LOCA ",
                 style: Style.greySmallNormal,
               ),
               Text(
-                "${widget.deptno}",
+                "${widget.loc}",
                 style: Style.blackSmallBold,
               ),
             ],
