@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:scottmanager/models/employee.model.dart';
 
 import '../../components/button.dart';
 import '../../models/department.model.dart';
@@ -10,6 +11,7 @@ import '../../style/style.dart';
 
 class Employee extends StatefulWidget {
   String action;
+  int empno = 0;
 
   Employee({required this.action});
 
@@ -24,6 +26,15 @@ class _EmployeeState extends State<Employee> {
   DateFormat outputFormat = DateFormat('yyyy/MM/dd');
   List<Dept> listDep = [];
   Dept deptSelect = new Dept(deptno: 0, dname: "", loc: "");
+  Emp employee = new Emp(
+      empno: 0,
+      ename: "ename",
+      job: "",
+      mgr: 0,
+      hiredate: DateTime.now(),
+      sal: "",
+      comm: "",
+      deptno: 0);
   int dept = 0;
 
   @override
@@ -36,26 +47,61 @@ class _EmployeeState extends State<Employee> {
   String prueba =
       '{"message": "Success","departments": [{"deptno": 23, "dname": "hiredate", "loc": "2001-11-14"}, {"deptno": 40,"dname": "OPERATIONS","loc": "BOSTON"}]}';
 
-  void getDataEdit() async {}
+  void getDataEdit() async {
+    try {
+      var baseUrl = 'http://10.0.2.2:8000/ScottManager/employees';
+      Response res = await get(
+        Uri.http(baseUrl),
+        headers: {"id": "${widget.empno}"},
+      );
+      if (res.statusCode == 200) {
+        var dept = jsonDecode(res.body);
+        employee = Emp.fromJson(dept);
+        controllers[0].text = employee.empno.toString();
+        controllers[1].text = employee.ename.toString();
+        controllers[2].text = employee.job.toString();
+        controllers[3].text = employee.mgr.toString();
+        controllers[4]
+          ..text = DateFormat.yMMMd().format(employee.hiredate)
+          ..selection = TextSelection.fromPosition(
+            TextPosition(
+                offset: controllers[4].text.length,
+                affinity: TextAffinity.upstream),
+          );
+        controllers[5].text = employee.sal.toString();
+        controllers[6].text = employee.comm.toString();
+        deptSelect.deptno = employee.deptno;
+      } else {
+        throw "Unable to retrieve posts.";
+      }
+    } catch (e) {}
+  }
 
   void saveData() async {
     try {
       var url = Uri.https('localhost:8000/ScottManager/employees');
-      var response = await post(
-        url,
-        body: {
-          "empno": controllers[0].text,
-          "ename": controllers[1].text,
-          "job": controllers[2].text,
-          "mgr": controllers[3].text,
-          "hiredate": outputFormat.format(_date),
-          "sal": controllers[5].text,
-          "comm": controllers[6].text,
-          "deptno": deptSelect.deptno,
-        },
-      );
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      var obj = {
+        "empno": controllers[0].text,
+        "ename": controllers[1].text,
+        "job": controllers[2].text,
+        "mgr": controllers[3].text,
+        "hiredate": outputFormat.format(_date),
+        "sal": controllers[5].text,
+        "comm": controllers[6].text,
+        "deptno": deptSelect.deptno,
+      };
+      Response response;
+      if (widget.action == "create") {
+        response = await post(
+          url,
+          body: obj,
+        );
+      } else {
+        response = await put(
+          url,
+          body: obj,
+        );
+      }
       Navigator.pop(context);
     } catch (e) {}
   }

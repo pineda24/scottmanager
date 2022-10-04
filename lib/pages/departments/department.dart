@@ -35,6 +35,9 @@ class _DepartmentState extends State<Department> {
       if (res.statusCode == 200) {
         var dept = jsonDecode(res.body);
         department = Dept.fromJson(dept);
+        controllers[0].text = department.deptno.toString();
+        controllers[1].text = department.dname.toString();
+        controllers[2].text = department.loc.toString();
       } else {
         throw "Unable to retrieve posts.";
       }
@@ -44,14 +47,24 @@ class _DepartmentState extends State<Department> {
   Future<void> saveData() async {
     try {
       var url = Uri.https('localhost:8000/ScottManager/departments');
-      var response = await post(
-        url,
-        body: {
-          "deptno": controllers[0].text,
-          "dname": controllers[1].text,
-          "loc": controllers[2].text,
-        },
-      );
+      Response response;
+      var obj = {
+        "deptno": controllers[0].text,
+        "dname": controllers[1].text,
+        "loc": controllers[2].text,
+      };
+      if (widget.action == "create") {
+        response = await post(
+          url,
+          body: obj,
+        );
+      } else {
+        response = await put(
+          url,
+          body: obj,
+        );
+      }
+
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
       Navigator.pop(context);
