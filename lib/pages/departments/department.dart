@@ -66,9 +66,6 @@ class _DepartmentState extends State<Department> {
           body: obj,
         );
       }
-
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
       Navigator.pop(context);
     } catch (e) {}
   }

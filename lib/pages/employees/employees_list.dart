@@ -96,13 +96,16 @@ class _EmployeeListState extends State<EmployeeList> {
 
   Future<void> deleteEmployee(int id) async {
     try {
-      var baseUrl = 'http://10.0.2.2:8000/ScottManager/employees';
-      Response res = await delete(
-        Uri.http(baseUrl),
-        headers: {"id": "${id}"},
-      );
+      var baseUrl = 'http://10.0.2.2:8000/ScottManager/employees/';
+      Response res = await delete(Uri.parse('$baseUrl$id'));
       if (res.statusCode == 200) {
-        print("Success Delete");
+        if (jsonDecode(res.body)["message"] == "Success") {
+          print(jsonDecode(res.body)["message"]);
+        } else {
+          jsonDecode(res.body)["error"].forEach((err){
+            print(err);
+          });
+        }
       } else {
         throw "Unable to retrieve delete.";
       }

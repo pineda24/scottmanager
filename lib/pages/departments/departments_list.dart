@@ -93,18 +93,19 @@ class _DepartmentsListState extends State<DepartmentsList> {
       }
     } catch (e) {}
   }
-<<<<<<< HEAD
-=======
 
   Future<void> deleteDepartment(int id) async {
     try {
-      var baseUrl = 'http://10.0.2.2:8000/ScottManager/departments';
-      Response res = await delete(
-        Uri.http(baseUrl),
-        headers: {"id": "${id}"},
-      );
+      var baseUrl = 'http://10.0.2.2:8000/ScottManager/departments/';
+      Response res = await delete(Uri.parse('$baseUrl$id'));
       if (res.statusCode == 200) {
-        print("Success Delete");
+        if (jsonDecode(res.body)["message"] == "Success") {
+          print(jsonDecode(res.body)["message"]);
+        } else {
+          jsonDecode(res.body)["error"].forEach((err){
+            print(err);
+          });
+        }
       } else {
         throw "Unable to retrieve delete.";
       }
@@ -112,13 +113,4 @@ class _DepartmentsListState extends State<DepartmentsList> {
       print(e);
     }
   }
-
-  // Future<void> getData() async {
-  //   List<dynamic> aux = jsonDecode(prueba)["departments"];
-  //   listDept = [];
-  //   for (var i = 0; i < aux.length; i++) {
-  //     listDept.add(Dept.fromJson(aux[i]));
-  //   }
-  // }
->>>>>>> 376b1076a45c93aa9ffe7b99fd346c125a8fb252
 }
