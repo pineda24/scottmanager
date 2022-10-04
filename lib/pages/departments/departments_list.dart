@@ -20,8 +20,8 @@ class _DepartmentsListState extends State<DepartmentsList> {
   @override
   void initState() {
     // TODO: implement initState
-    getData();
     super.initState();
+    getData();
   }
 
   @override
@@ -102,7 +102,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
         if (jsonDecode(res.body)["message"] == "Success") {
           print(jsonDecode(res.body)["message"]);
         } else {
-          jsonDecode(res.body)["error"].forEach((err){
+          jsonDecode(res.body)["error"].forEach((err) {
             print(err);
           });
         }

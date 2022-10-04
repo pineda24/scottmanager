@@ -23,7 +23,7 @@ class _LogicScreenState extends State<LogicScreen> {
     print("HOLA");
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const MenuTabs()),
+      MaterialPageRoute(builder: (context) => MenuTabs()),
     );
   }
 

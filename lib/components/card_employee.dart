@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../style/style.dart';
 
@@ -10,7 +11,7 @@ class Card_employee extends StatefulWidget {
   String ename;
   String job;
   String mgr;
-  String hiredate;
+  DateTime hiredate;
   String sal;
   String comm;
   String deptno;
@@ -33,6 +34,8 @@ class Card_employee extends StatefulWidget {
 }
 
 class _Card_employeeState extends State<Card_employee> {
+  DateFormat outputFormat = DateFormat('dd/MM/yyyy');
+
   @override
   Widget build(BuildContext context) {
     return cardReservation(context);
@@ -128,7 +131,8 @@ class _Card_employeeState extends State<Card_employee> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "HIRE", "${widget.hiredate}"),
+            child: typeName(
+                context, "HIRE", "${outputFormat.format(widget.hiredate)}"),
           ),
         ],
       ),

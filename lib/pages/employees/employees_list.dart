@@ -83,7 +83,7 @@ class _EmployeeListState extends State<EmployeeList> {
               deptno: "${listEmployees[index].deptno}",
               empno: "${listEmployees[index].empno}",
               ename: "${listEmployees[index].ename}",
-              hiredate: "${listEmployees[index].hiredate}",
+              hiredate: listEmployees[index].hiredate,
               job: "${listEmployees[index].job}",
               mgr: "${listEmployees[index].mgr}",
               sal: "${listEmployees[index].sal}",
@@ -102,7 +102,7 @@ class _EmployeeListState extends State<EmployeeList> {
         if (jsonDecode(res.body)["message"] == "Success") {
           print(jsonDecode(res.body)["message"]);
         } else {
-          jsonDecode(res.body)["error"].forEach((err){
+          jsonDecode(res.body)["error"].forEach((err) {
             print(err);
           });
         }

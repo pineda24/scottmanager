@@ -48,6 +48,7 @@ class _MenuTabsState extends State<MenuTabs> {
                 onTap: (value) {
                   setState(() {
                     index = value;
+                    // initState();
                   });
                 },
                 tabs: [
