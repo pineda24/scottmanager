@@ -53,17 +53,18 @@ class _EmployeeListState extends State<EmployeeList> {
           key: Key("${listEmployees[index].empno}"),
           // Provide a function that tells the app
           // what to do after an item has been swiped away.
-          onDismissed: (direction) {
+          onDismissed: (direction) async {
             // Remove the item from the data source.
-            setState(() {
-              listEmployees.removeAt(index);
+            setState(() async {
+              await deleteEmployee(listEmployees[index].empno);
+              // listEmployees.removeAt(index);
+              await getData();
             });
 
             // // Then show a snackbar.
             // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             //     content: Text('${listEmployees[index].namme} dismissed')));
           },
-          // Show a red background as the item is swiped away.
           background: Container(color: Colors.red),
           child: InkWell(
             onTap: () {
@@ -91,6 +92,23 @@ class _EmployeeListState extends State<EmployeeList> {
         );
       },
     );
+  }
+
+  Future<void> deleteEmployee(int id) async {
+    try {
+      var baseUrl = 'http://10.0.2.2:8000/ScottManager/employees';
+      Response res = await delete(
+        Uri.http(baseUrl),
+        headers: {"id": "${id}"},
+      );
+      if (res.statusCode == 200) {
+        print("Success Delete");
+      } else {
+        throw "Unable to retrieve delete.";
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   // List<Widget> listEmployees(BuildContext context) {
