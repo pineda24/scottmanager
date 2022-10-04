@@ -6,16 +6,26 @@ import '../style/style.dart';
 
 class Card_employee extends StatefulWidget {
   Color color;
-  String type;
-  int people;
-  String loca;
+  String empno;
+  String ename;
+  String job;
+  String mgr;
+  String hiredate;
+  String sal;
+  String comm;
+  String deptno;
   Card_employee({
     Key? key,
-    required this.type,
     // required this.number,
-    required this.people,
     required this.color,
-    required this.loca,
+    required this.empno,
+    required this.ename,
+    required this.job,
+    required this.mgr,
+    required this.hiredate,
+    required this.sal,
+    required this.comm,
+    required this.deptno,
   }) : super(key: key);
 
   @override
@@ -52,7 +62,7 @@ class _Card_employeeState extends State<Card_employee> {
                 style: Style.blackSmallNormal,
               ),
               Text(
-                widget.type.toUpperCase(),
+                widget.ename.toUpperCase(),
                 style: Style.blackSmallBold,
               ),
             ],
@@ -78,38 +88,19 @@ class _Card_employeeState extends State<Card_employee> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "JOB", "${widget.people}"),
+            child: typeName(context, "JOB", "${widget.job}"),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "MGR", "${widget.people}"),
+            child: typeName(context, "MGR", "${widget.mgr}"),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "MGR", "${widget.people}"),
-          ),
-        ],
-      ),
-    );
-
-    aux.add(SizedBox(
-      height: 5,
-    ));
-
-    aux.add(
-      Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "MGR", "${widget.people}"),
+            child: typeName(context, "COMM", "${widget.comm}"),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "SALARY", "${2000}"),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "COMM", "${'NPI'}"),
+            child: typeName(context, "SALARY", "${widget.sal}"),
           ),
         ],
       ),
@@ -124,11 +115,11 @@ class _Card_employeeState extends State<Card_employee> {
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "DEP", "${'ADMINISTRACION'}"),
+            child: typeName(context, "DEP", "${widget.deptno}"),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: typeName(context, "HIRE", "${'12/09/2022'}"),
+            child: typeName(context, "HIRE", "${widget.hiredate}"),
           ),
         ],
       ),

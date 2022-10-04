@@ -6,6 +6,7 @@ import 'package:scottmanager/pages/employees/employee.dart';
 import 'package:http/http.dart' as http;
 
 import '../../components/card_employee.dart';
+import '../../models/employee.model.dart';
 
 class EmployeeList extends StatefulWidget {
   const EmployeeList();
@@ -15,96 +16,108 @@ class EmployeeList extends StatefulWidget {
 }
 
 class _EmployeeListState extends State<EmployeeList> {
-  List<Widget> listEmployees = [];
+  List<Emp> listEmployees = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getData();
   }
 
   Future<void> getData() async {
-    // Response res = await get(Uri.http('localhost:3000', 'team'));
-    // if (res.statusCode == 200) {
-    //   List<dynamic> aux = jsonDecode(res.body);
-    //   List<Team> teams = [];
-    //   for (var i = 0; i < aux.length; i++) {
-    //     teams.add(Team.fromJson(aux[i]));
-    //   }
-
-    //   return teams;
-    // } else {
-    //   throw "Unable to retrieve posts.";
-    // }
-  }
-
-  void getEmployeesList() async {
-    var url = Uri.https('example.com', 'whatsit/create');
-    var response =
-        await http.post(url, body: {'name': 'doodle', 'color': 'blue'});
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
-    print(await http.read(Uri.https('example.com', 'foobar.txt')));
+    try {
+      Response res =
+          await get(Uri.http('localhost:8000/ScottManager/', 'employees'));
+      if (res.statusCode == 200) {
+        List<dynamic> aux = jsonDecode(res.body);
+        listEmployees = [];
+        for (var i = 0; i < aux.length; i++) {
+          listEmployees.add(Emp.fromJson(aux[i]));
+        }
+      } else {
+        throw "Unable to retrieve posts.";
+      }
+    } catch (e) {}
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 5,
+      itemCount: listEmployees.length,
       itemBuilder: (context, index) {
-        final item = items[index];
+        final item = listEmployees[index];
         return Dismissible(
           // Each Dismissible must contain a Key. Keys allow Flutter to
           // uniquely identify widgets.
-          key: Key("${index}"),
+          key: Key("${listEmployees[index].empno}"),
           // Provide a function that tells the app
           // what to do after an item has been swiped away.
           onDismissed: (direction) {
             // Remove the item from the data source.
             setState(() {
-              items.removeAt(index);
+              listEmployees.removeAt(index);
             });
 
-            // Then show a snackbar.
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text('$item dismissed')));
+            // // Then show a snackbar.
+            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //     content: Text('${listEmployees[index].namme} dismissed')));
           },
           // Show a red background as the item is swiped away.
           background: Container(color: Colors.red),
-          child: ListTile(
-            title: Text(item),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Employee(
+                    action: "edit",
+                  ),
+                ),
+              );
+            },
+            child: Card_employee(
+              color: Colors.white,
+              comm: "${listEmployees[index].comm}",
+              deptno: "${listEmployees[index].deptno}",
+              empno: "${listEmployees[index].empno}",
+              ename: "${listEmployees[index].ename}",
+              hiredate: "${listEmployees[index].hiredate}",
+              job: "${listEmployees[index].job}",
+              mgr: "${listEmployees[index].mgr}",
+              sal: "${listEmployees[index].sal}",
+            ),
           ),
         );
       },
     );
   }
 
-  List<Widget> listEmployees(BuildContext context) {
-    List<Widget> aux = [];
-    for (var i = 0; i < 10; i++) {
-      aux.add(
-        InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Employee(
-                  action: "edit",
-                ),
-              ),
-            );
-          },
-          child: Card_employee(
-            color: Colors.white,
-            people: 10,
-            type: "Raul Hiram Pineda Chavez",
-            loca: "CHIHUAHUA",
-          ),
-        ),
-      );
-      aux.add(Divider());
-    }
-    return aux;
-  }
+  // List<Widget> listEmployees(BuildContext context) {
+  //   List<Widget> aux = [];
+  //   for (var i = 0; i < 10; i++) {
+  //     aux.add(
+  //       InkWell(
+  //         onTap: () {
+  //           Navigator.push(
+  //             context,
+  //             MaterialPageRoute(
+  //               builder: (context) => Employee(
+  //                 action: "edit",
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //         child: Card_employee(
+  //           color: Colors.white,
+  //           people: 10,
+  //           type: "Raul Hiram Pineda Chavez",
+  //           loca: "CHIHUAHUA",
+  //         ),
+  //       ),
+  //     );
+  //     aux.add(Divider());
+  //   }
+  //   return aux;
+  // }
 }
