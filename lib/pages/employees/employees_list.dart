@@ -28,9 +28,9 @@ class _EmployeeListState extends State<EmployeeList> {
   Future<void> getData() async {
     try {
       Response res =
-          await get(Uri.http('localhost:8000/ScottManager/', 'employees'));
+          await get(Uri.http('10.0.2.2:8000/ScottManager/', 'employees'));
       if (res.statusCode == 200) {
-        List<dynamic> aux = jsonDecode(res.body);
+        List<dynamic> aux = jsonDecode(res.body)["employees"];
         listEmployees = [];
         for (var i = 0; i < aux.length; i++) {
           listEmployees.add(Emp.fromJson(aux[i]));

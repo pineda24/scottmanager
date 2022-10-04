@@ -63,7 +63,7 @@ class _EmployeeState extends State<Employee> {
   void getDept() async {
     try {
       Response res =
-          await get(Uri.http('localhost:8000/ScottManager/', 'departments'));
+          await get(Uri.http('10.0.2.2:8000/ScottManager/', 'departments'));
       if (res.statusCode == 200) {
         List<dynamic> aux = jsonDecode(res.body)["departments"];
         listDep = [];
