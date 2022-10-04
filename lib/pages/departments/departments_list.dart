@@ -17,9 +17,6 @@ class DepartmentsList extends StatefulWidget {
 class _DepartmentsListState extends State<DepartmentsList> {
   List<Dept> listDept = [];
 
-  String prueba =
-      '{"message": "Success","departments": [{"deptno": 23, "dname": "hiredate", "loc": "2001-11-14"}, {"deptno": 40,"dname": "OPERATIONS","loc": "BOSTON"}]}';
-
   @override
   void initState() {
     // TODO: implement initState
@@ -66,7 +63,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
               color: Colors.white,
               deptno: "${listDept[index].deptno}",
               dname: "${listDept[index].dname}",
-              people: "${15}",
+              people: "${listDept[index].people}",
               loc: "${listDept[index].loc}",
             ),
           ),
@@ -78,14 +75,22 @@ class _DepartmentsListState extends State<DepartmentsList> {
 
   Future<void> getData() async {
     try {
-      Response res =
-          await get(Uri.http('localhost:8000/ScottManager/', 'departments'));
+      var baseUrl = 'http://10.0.2.2:8000/ScottManager/departments/';
+      Response res = await get(Uri.parse(baseUrl));
       if (res.statusCode == 200) {
-        List<dynamic> aux = jsonDecode(prueba)["departments"];
+        List<dynamic> aux = jsonDecode(res.body)["departments"];
         listDept = [];
         for (var i = 0; i < aux.length; i++) {
           listDept.add(Dept.fromJson(aux[i]));
         }
+        try {
+          baseUrl = 'http://10.0.2.2:8000/ScottManager/departments/';
+          for (var i = 0; i < listDept.length; i++) {
+            res = await get(
+                Uri.parse(baseUrl + '${listDept[i].deptno}/employees'));
+            listDept[i].people = jsonDecode(res.body)["no_employees"];
+          }
+        } catch (e) {}
       } else {
         throw "Unable to retrieve posts.";
       }

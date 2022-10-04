@@ -8,12 +8,13 @@ class Dept {
     Dept({
         required this.deptno,
         required this.dname,
-        required this.loc,
+        required this.loc
     });
 
     int deptno;
     String dname;
     String loc;
+    int people = 0;
 
     factory Dept.fromJson(Map<String, dynamic> json) => Dept(
         deptno: json["deptno"],

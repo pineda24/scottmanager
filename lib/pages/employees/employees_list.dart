@@ -34,7 +34,6 @@ class _EmployeeListState extends State<EmployeeList> {
         listEmployees = [];
         for (var i = 0; i < aux.length; i++) {
           listEmployees.add(Emp.fromJson(aux[i]));
-          print(listEmployees);
         }
       } else {
         throw "Unable to retrieve posts.";
