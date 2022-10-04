@@ -6,16 +6,17 @@ import '../style/style.dart';
 
 class Card_departments extends StatefulWidget {
   Color color;
-  String type;
-  int people;
-  String loca;
+  String deptno;
+  String dname;
+  String loc;
+  String people;
   Card_departments({
     Key? key,
-    required this.type,
-    // required this.number,
-    required this.people,
     required this.color,
-    required this.loca,
+    required this.deptno,
+    required this.dname,
+    required this.loc,
+    required this.people,
   }) : super(key: key);
 
   @override
@@ -52,7 +53,7 @@ class _Card_departmentsState extends State<Card_departments> {
                 style: Style.blackSmallNormal,
               ),
               Text(
-                widget.type,
+                widget.dname,
                 style: Style.blackSmallBold,
               ),
             ],
@@ -63,7 +64,7 @@ class _Card_departmentsState extends State<Card_departments> {
               iconListCont(context),
               Spacer(),
               Text(
-                "${widget.loca}",
+                "${widget.loc}",
                 style: Style.greySmallNormal,
               ),
             ],
