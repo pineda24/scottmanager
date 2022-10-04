@@ -17,11 +17,14 @@ class DepartmentsList extends StatefulWidget {
 class _DepartmentsListState extends State<DepartmentsList> {
   List<Dept> listDept = [];
 
+  String prueba =
+      '{"message": "Success","departments": [{"deptno": 23, "dname": "hiredate", "loc": "2001-11-14"}, {"deptno": 40,"dname": "OPERATIONS","loc": "BOSTON"}]}';
+
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     getData();
+    super.initState();
   }
 
   @override
@@ -78,7 +81,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
       Response res =
           await get(Uri.http('localhost:8000/ScottManager/', 'departments'));
       if (res.statusCode == 200) {
-        List<dynamic> aux = jsonDecode(res.body);
+        List<dynamic> aux = jsonDecode(prueba)["departments"];
         listDept = [];
         for (var i = 0; i < aux.length; i++) {
           listDept.add(Dept.fromJson(aux[i]));
@@ -88,4 +91,12 @@ class _DepartmentsListState extends State<DepartmentsList> {
       }
     } catch (e) {}
   }
+
+  // Future<void> getData() async {
+  //   List<dynamic> aux = jsonDecode(prueba)["departments"];
+  //   listDept = [];
+  //   for (var i = 0; i < aux.length; i++) {
+  //     listDept.add(Dept.fromJson(aux[i]));
+  //   }
+  // }
 }
