@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 
 import '../../components/button.dart';
+import '../../models/department.model.dart';
 import '../../style/style.dart';
 
 class Employee extends StatefulWidget {
@@ -17,8 +21,76 @@ class _EmployeeState extends State<Employee> {
   List<TextEditingController> controllers =
       List.generate(7, (int index) => TextEditingController());
   DateTime _date = DateTime.now();
+  DateFormat outputFormat = DateFormat('yyyy/MM/dd');
+  List<Dept> listDep = [];
+  Dept deptSelect = new Dept(deptno: 0, dname: "", loc: "");
+  int dept = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDept2();
+  }
+
+  String prueba =
+      '{"message": "Success","departments": [{"deptno": 23, "dname": "hiredate", "loc": "2001-11-14"}, {"deptno": 40,"dname": "OPERATIONS","loc": "BOSTON"}]}';
 
   void getDataEdit() async {}
+
+  void saveData() async {
+    try {
+      var url = Uri.https('localhost:8000/ScottManager/employees');
+      var response = await post(
+        url,
+        body: {
+          "empno": controllers[0].text,
+          "ename": controllers[1].text,
+          "job": controllers[2].text,
+          "mgr": controllers[3].text,
+          "hiredate": outputFormat.format(_date),
+          "sal": controllers[5].text,
+          "comm": controllers[6].text,
+          "deptno": deptSelect.deptno,
+        },
+      );
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      Navigator.pop(context);
+    } catch (e) {}
+  }
+
+  void getDept() async {
+    try {
+      Response res =
+          await get(Uri.http('localhost:8000/ScottManager/', 'departments'));
+      if (res.statusCode == 200) {
+        List<dynamic> aux = jsonDecode(res.body)["departments"];
+        listDep = [];
+        for (var i = 0; i < aux.length; i++) {
+          listDep.add(Dept.fromJson(aux[i]));
+        }
+      } else {
+        throw "Unable to retrieve posts.";
+      }
+    } catch (e) {}
+  }
+
+  void getDept2() async {
+    try {
+      List<dynamic> aux = jsonDecode(prueba)["departments"];
+      listDep = [];
+      for (var i = 0; i < aux.length; i++) {
+        if (i == 0) {
+          setState(() {
+            deptSelect = Dept.fromJson(aux[i]);
+          });
+        }
+        listDep.add(Dept.fromJson(aux[i]));
+        print(listDep[i].dname);
+      }
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,19 +154,19 @@ class _EmployeeState extends State<Employee> {
       padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
       child: Button(
         text: "Guardar",
-        onPressed: () {},
+        onPressed: () {
+          saveData();
+        },
       ),
     );
   }
-
-  List<String> texts = ["A", "B"];
 
   Widget dropDownDept(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: DropdownButtonFormField(
         isExpanded: true,
-        value: "A",
+        value: deptSelect.dname,
         validator: (value) {},
         decoration: InputDecoration(
           labelText: "Departamento",
@@ -102,10 +174,15 @@ class _EmployeeState extends State<Employee> {
               EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         ),
         style: Style.formTextLight,
-        items: texts.map<DropdownMenuItem<String>>((e) {
-          return DropdownMenuItem(child: Text('$e'), value: e.toString());
+        items: listDep.map<DropdownMenuItem<String>>((e) {
+          return DropdownMenuItem(
+              child: Text('${e.dname}'), value: e.dname.toString());
         }).toList(),
-        onChanged: (value) {},
+        onChanged: (value) {
+          for (var i = 0; i < listDep.length; i++) {
+            if (listDep[i].dname == value) deptSelect = listDep[i];
+          }
+        },
       ),
     );
   }
