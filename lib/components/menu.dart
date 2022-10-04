@@ -46,7 +46,6 @@ class _MenuTabsState extends State<MenuTabs> {
             appBar: AppBar(
               bottom: TabBar(
                 onTap: (value) {
-                  print(value);
                   setState(() {
                     index = value;
                   });
@@ -77,10 +76,6 @@ class _MenuTabsState extends State<MenuTabs> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    print("State changed");
-                    setState(() {
-                      
-                    });
                     if (index == 0) {
                       Navigator.push(
                         context,

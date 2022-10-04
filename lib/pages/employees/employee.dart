@@ -79,7 +79,7 @@ class _EmployeeState extends State<Employee> {
 
   void saveData() async {
     try {
-      var url = Uri.https('localhost:8000/ScottManager/employees');
+      var url = Uri.https('localhost:8000/ScottManager/employees/');
       var obj = {
         "empno": controllers[0].text,
         "ename": controllers[1].text,
@@ -96,11 +96,33 @@ class _EmployeeState extends State<Employee> {
           url,
           body: obj,
         );
+        if (response.statusCode == 200) {
+          if (jsonDecode(response.body)["message"] == "Success") {
+            print(jsonDecode(response.body)["message"]);
+          } else {
+            jsonDecode(response.body)["error"].forEach((err) {
+              print(err);
+            });
+          }
+        } else {
+          throw "Unable to retrieve post.";
+        }
       } else {
         response = await put(
           url,
           body: obj,
         );
+        if (response.statusCode == 200) {
+          if (jsonDecode(response.body)["message"] == "Success") {
+            print(jsonDecode(response.body)["message"]);
+          } else {
+            jsonDecode(response.body)["error"].forEach((err) {
+              print(err);
+            });
+          }
+        } else {
+          throw "Unable to retrieve put.";
+        }
       }
       Navigator.pop(context);
     } catch (e) {}

@@ -30,8 +30,8 @@ class _DepartmentState extends State<Department> {
 
   Future<void> getData() async {
     try {
-      Response res = await get(Uri.http(
-          'localhost:8000/ScottManager/departments', '${widget.dpno}'));
+      Response res = await get(
+          Uri.parse('10.0.2.2:8000/ScottManager/departments/${widget.dpno}'));
       if (res.statusCode == 200) {
         List<dynamic> depts = jsonDecode(res.body)['departments'];
         if (depts.length > 0) {
@@ -43,7 +43,9 @@ class _DepartmentState extends State<Department> {
       } else {
         throw "Unable to retrieve posts.";
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> saveData() async {
@@ -60,14 +62,38 @@ class _DepartmentState extends State<Department> {
           baseUrl,
           body: jsonEncode(obj),
         );
+        if (response.statusCode == 200) {
+          if (jsonDecode(response.body)["message"] == "Success") {
+            print(jsonDecode(response.body)["message"]);
+          } else {
+            jsonDecode(response.body)["error"].forEach((err) {
+              print(err);
+            });
+          }
+        } else {
+          throw "Unable to retrieve post.";
+        }
       } else {
         response = await put(
           baseUrl,
           body: obj,
         );
+        if (response.statusCode == 200) {
+          if (jsonDecode(response.body)["message"] == "Success") {
+            print(jsonDecode(response.body)["message"]);
+          } else {
+            jsonDecode(response.body)["error"].forEach((err) {
+              print(err);
+            });
+          }
+        } else {
+          throw "Unable to retrieve put.";
+        }
       }
       Navigator.pop(context);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
