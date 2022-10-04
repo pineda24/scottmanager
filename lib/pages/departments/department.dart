@@ -9,9 +9,9 @@ import '../../style/style.dart';
 
 class Department extends StatefulWidget {
   String action;
-  int dpno = 0;
+  int dpno;
 
-  Department({required this.action});
+  Department({required this.action, required this.dpno});
 
   @override
   State<Department> createState() => _DepartmentState();
@@ -21,6 +21,7 @@ class _DepartmentState extends State<Department> {
   List<TextEditingController> controllers =
       List.generate(3, (int index) => TextEditingController());
   Dept department = new Dept(deptno: 0, dname: "", loc: "");
+  List<String> atributes = ["deptno", "dname", "loc"];
 
   @override
   void initState() {
@@ -30,8 +31,8 @@ class _DepartmentState extends State<Department> {
 
   Future<void> getData() async {
     try {
-      Response res = await get(
-          Uri.parse('10.0.2.2:8000/ScottManager/departments/${widget.dpno}'));
+      Response res = await get(Uri.parse(
+          'http://10.0.2.2:8000/ScottManager/departments/${widget.dpno}'));
       if (res.statusCode == 200) {
         List<dynamic> depts = jsonDecode(res.body)['departments'];
         if (depts.length > 0) {
@@ -74,20 +75,26 @@ class _DepartmentState extends State<Department> {
           throw "Unable to retrieve post.";
         }
       } else {
-        response = await put(
-          baseUrl,
-          body: obj,
-        );
-        if (response.statusCode == 200) {
-          if (jsonDecode(response.body)["message"] == "Success") {
-            print(jsonDecode(response.body)["message"]);
+        for (var i = 0; i < controllers.length; i++) {
+          var json_obj = {
+            "atribute": atributes[i],
+            "value": controllers[i].text
+          };
+          response = await put(
+            Uri.parse('$baseUrl${widget.dpno}'),
+            body: jsonEncode(json_obj),
+          );
+          if (response.statusCode == 200) {
+            if (jsonDecode(response.body)["message"] == "Success") {
+              print(jsonDecode(response.body)["message"]);
+            } else {
+              jsonDecode(response.body)["error"].forEach((err) {
+                print(err);
+              });
+            }
           } else {
-            jsonDecode(response.body)["error"].forEach((err) {
-              print(err);
-            });
+            throw "Unable to retrieve put.";
           }
-        } else {
-          throw "Unable to retrieve put.";
         }
       }
       Navigator.pop(context);
@@ -120,12 +127,7 @@ class _DepartmentState extends State<Department> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               textField(
-                  context,
-                  'NUMERO DE DEPARTAMENTO',
-                  controllers[0],
-                  widget.action != "create"
-                      ? new AlwaysDisabledFocusNode()
-                      : null),
+                  context, 'NUMERO DE DEPARTAMENTO', controllers[0], null),
               textField(context, 'DEPARTAMENTO', controllers[1], null),
               textField(context, 'LOCALIZACION', controllers[2], null),
             ],

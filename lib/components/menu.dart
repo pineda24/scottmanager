@@ -83,6 +83,7 @@ class _MenuTabsState extends State<MenuTabs> {
                         MaterialPageRoute(
                             builder: (context) => Department(
                                   action: "create",
+                                  dpno: -1,
                                 )),
                       );
                     } else {
@@ -91,6 +92,7 @@ class _MenuTabsState extends State<MenuTabs> {
                         MaterialPageRoute(
                             builder: (context) => Employee(
                                   action: "create",
+                                  empno: -1,
                                 )),
                       );
                     }

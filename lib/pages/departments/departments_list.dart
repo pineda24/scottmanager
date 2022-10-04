@@ -52,6 +52,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
                 MaterialPageRoute(
                   builder: (context) => Department(
                     action: "edit",
+                    dpno: listDept[index].deptno,
                   ),
                 ),
               );
@@ -85,9 +86,15 @@ class _DepartmentsListState extends State<DepartmentsList> {
           for (var i = 0; i < listDept.length; i++) {
             res =
                 await get(Uri.parse('$baseUrl${listDept[i].deptno}/employees'));
-            listDept[i].people = jsonDecode(res.body)["no_employees"];
+            if (jsonDecode(res.body)["message"] == 'Success') {
+              listDept[i].people = jsonDecode(res.body)["no_employees"];
+            } else {
+              listDept[i].people = 0;
+            }
           }
-        } catch (e) {}
+        } catch (e) {
+          print(e);
+        }
       } else {
         throw "Unable to retrieve posts.";
       }

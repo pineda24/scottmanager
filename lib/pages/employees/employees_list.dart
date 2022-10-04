@@ -73,6 +73,7 @@ class _EmployeeListState extends State<EmployeeList> {
                 MaterialPageRoute(
                   builder: (context) => Employee(
                     action: "edit",
+                    empno: listEmployees[index].empno,
                   ),
                 ),
               );

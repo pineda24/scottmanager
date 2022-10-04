@@ -11,9 +11,9 @@ import '../../style/style.dart';
 
 class Employee extends StatefulWidget {
   String action;
-  int empno = 0;
+  int empno;
 
-  Employee({required this.action});
+  Employee({required this.action, required this.empno});
 
   @override
   State<Employee> createState() => _EmployeeState();
@@ -21,9 +21,9 @@ class Employee extends StatefulWidget {
 
 class _EmployeeState extends State<Employee> {
   List<TextEditingController> controllers =
-      List.generate(7, (int index) => TextEditingController());
+      List.generate(8, (int index) => TextEditingController());
   DateTime _date = DateTime.now();
-  DateFormat outputFormat = DateFormat('yyyy/MM/dd');
+  DateFormat outputFormat = DateFormat('yyyy-MM-dd');
   List<Dept> listDep = [];
   Dept deptSelect = new Dept(deptno: 0, dname: "", loc: "");
   Emp employee = new Emp(
@@ -36,65 +36,75 @@ class _EmployeeState extends State<Employee> {
       comm: "",
       deptno: 0);
   int dept = 0;
+  List<String> atributes = [
+    "empno",
+    "ename",
+    "job",
+    "mgr",
+    "hiredate",
+    "sal",
+    "comm",
+    "deptno"
+  ];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDept2();
+    if (widget.action == "edit") getData();
   }
 
-  String prueba =
-      '{"message": "Success","departments": [{"deptno": 23, "dname": "hiredate", "loc": "2001-11-14"}, {"deptno": 40,"dname": "OPERATIONS","loc": "BOSTON"}]}';
-
-  void getDataEdit() async {
+  void getData() async {
     try {
-      var baseUrl = 'http://10.0.2.2:8000/ScottManager/employees';
-      Response res = await get(
-        Uri.http(baseUrl),
-        headers: {"id": "${widget.empno}"},
-      );
+      Response res = await get(Uri.parse(
+          'http://10.0.2.2:8000/ScottManager/employees/${widget.empno}'));
       if (res.statusCode == 200) {
-        var dept = jsonDecode(res.body);
-        employee = Emp.fromJson(dept);
-        controllers[0].text = employee.empno.toString();
-        controllers[1].text = employee.ename.toString();
-        controllers[2].text = employee.job.toString();
-        controllers[3].text = employee.mgr.toString();
-        controllers[4]
-          ..text = DateFormat.yMMMd().format(employee.hiredate)
-          ..selection = TextSelection.fromPosition(
-            TextPosition(
-                offset: controllers[4].text.length,
-                affinity: TextAffinity.upstream),
-          );
-        controllers[5].text = employee.sal.toString();
-        controllers[6].text = employee.comm.toString();
-        deptSelect.deptno = employee.deptno;
+        List<dynamic> emps = jsonDecode(res.body)['employees'];
+        if (emps.length > 0) {
+          employee = Emp.fromJson(emps[0]);
+          controllers[0].text = employee.empno.toString();
+          controllers[1].text = employee.ename.toString();
+          controllers[2].text = employee.job.toString();
+          controllers[3].text = employee.mgr.toString();
+          _date = DateTime.parse(employee.hiredate.toString());
+          controllers[4]
+            ..text = DateFormat.yMMMd().format(employee.hiredate)
+            ..selection = TextSelection.fromPosition(
+              TextPosition(
+                  offset: controllers[4].text.length,
+                  affinity: TextAffinity.upstream),
+            );
+          controllers[5].text = employee.sal.toString();
+          controllers[6].text = employee.comm.toString();
+          controllers[7].text = employee.deptno.toString();
+          // deptSelect.deptno = employee.deptno;
+        }
       } else {
         throw "Unable to retrieve posts.";
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   void saveData() async {
     try {
-      var url = Uri.https('localhost:8000/ScottManager/employees/');
+      var baseUrl = Uri.parse('http://10.0.2.2:8000/ScottManager/employees/');
       var obj = {
         "empno": controllers[0].text,
         "ename": controllers[1].text,
         "job": controllers[2].text,
         "mgr": controllers[3].text,
-        "hiredate": outputFormat.format(_date),
+        "hiredate": outputFormat.format(_date).toString(),
         "sal": controllers[5].text,
         "comm": controllers[6].text,
-        "deptno": deptSelect.deptno,
+        "deptno": controllers[7].text,
       };
       Response response;
       if (widget.action == "create") {
         response = await post(
-          url,
-          body: obj,
+          baseUrl,
+          body: jsonEncode(obj),
         );
         if (response.statusCode == 200) {
           if (jsonDecode(response.body)["message"] == "Success") {
@@ -108,20 +118,31 @@ class _EmployeeState extends State<Employee> {
           throw "Unable to retrieve post.";
         }
       } else {
-        response = await put(
-          url,
-          body: obj,
-        );
-        if (response.statusCode == 200) {
-          if (jsonDecode(response.body)["message"] == "Success") {
-            print(jsonDecode(response.body)["message"]);
+        for (var i = 0; i < controllers.length; i++) {
+          var json_obj;
+          if (atributes[i] == "hiredate") {
+            json_obj = {
+              "atribute": atributes[i],
+              "value": outputFormat.format(_date).toString()
+            };
           } else {
-            jsonDecode(response.body)["error"].forEach((err) {
-              print(err);
-            });
+            json_obj = {"atribute": atributes[i], "value": controllers[i].text};
           }
-        } else {
-          throw "Unable to retrieve put.";
+          response = await put(
+            Uri.parse('$baseUrl${widget.empno}'),
+            body: jsonEncode(json_obj),
+          );
+          if (response.statusCode == 200) {
+            if (jsonDecode(response.body)["message"] == "Success") {
+              print(jsonDecode(response.body)["message"]);
+            } else {
+              jsonDecode(response.body)["error"].forEach((err) {
+                print(err);
+              });
+            }
+          } else {
+            throw "Unable to retrieve put.";
+          }
         }
       }
       Navigator.pop(context);
@@ -140,22 +161,6 @@ class _EmployeeState extends State<Employee> {
         }
       } else {
         throw "Unable to retrieve posts.";
-      }
-    } catch (e) {}
-  }
-
-  void getDept2() async {
-    try {
-      List<dynamic> aux = jsonDecode(prueba)["departments"];
-      listDep = [];
-      for (var i = 0; i < aux.length; i++) {
-        if (i == 0) {
-          setState(() {
-            deptSelect = Dept.fromJson(aux[i]);
-          });
-        }
-        listDep.add(Dept.fromJson(aux[i]));
-        print(listDep[i].dname);
       }
     } catch (e) {}
   }
@@ -202,7 +207,9 @@ class _EmployeeState extends State<Employee> {
                   null),
               textField(context, 'COMMISSION', controllers[6],
                   TextInputType.number, null),
-              dropDownDept(context),
+              // dropDownDept(context),
+              textField(context, 'DEPARTMENT', controllers[7],
+                  TextInputType.number, null),
             ],
           ),
         ),
