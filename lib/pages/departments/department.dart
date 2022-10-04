@@ -75,11 +75,9 @@ class _DepartmentState extends State<Department> {
           throw "Unable to retrieve post.";
         }
       } else {
+        var json_obj;
         for (var i = 0; i < controllers.length; i++) {
-          var json_obj = {
-            "atribute": atributes[i],
-            "value": controllers[i].text
-          };
+          json_obj = {"atribute": atributes[i], "value": controllers[i].text};
           response = await put(
             Uri.parse('$baseUrl${widget.dpno}'),
             body: jsonEncode(json_obj),

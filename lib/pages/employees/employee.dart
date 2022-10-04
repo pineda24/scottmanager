@@ -191,7 +191,7 @@ class _EmployeeState extends State<Employee> {
                   context,
                   'NUMERO DE EMPLEADO',
                   controllers[0],
-                  TextInputType.text,
+                  TextInputType.number,
                   widget.action != "create"
                       ? new AlwaysDisabledFocusNode()
                       : null),

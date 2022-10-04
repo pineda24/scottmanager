@@ -58,12 +58,12 @@ class _Card_departmentsState extends State<Card_departments> {
               ),
               Spacer(),
               Text(
-                "No.${widget.deptno}",
+                "No. ",
                 style: Style.greySmallNormal,
               ),
               Text(
-                "No.${widget.deptno}",
-                style: Style.greySmallNormal,
+                widget.deptno,
+                style: Style.blackSmallBold,
               ),
             ],
           ),
