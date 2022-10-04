@@ -33,11 +33,13 @@ class _DepartmentState extends State<Department> {
       Response res = await get(Uri.http(
           'localhost:8000/ScottManager/departments', '${widget.dpno}'));
       if (res.statusCode == 200) {
-        var dept = jsonDecode(res.body);
-        department = Dept.fromJson(dept);
-        controllers[0].text = department.deptno.toString();
-        controllers[1].text = department.dname.toString();
-        controllers[2].text = department.loc.toString();
+        List<dynamic> depts = jsonDecode(res.body)['departments'];
+        if (depts.length > 0) {
+          department = Dept.fromJson(depts[0]);
+          controllers[0].text = department.deptno.toString();
+          controllers[1].text = department.dname.toString();
+          controllers[2].text = department.loc.toString();
+        }
       } else {
         throw "Unable to retrieve posts.";
       }
