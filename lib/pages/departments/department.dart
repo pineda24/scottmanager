@@ -48,7 +48,7 @@ class _DepartmentState extends State<Department> {
 
   Future<void> saveData() async {
     try {
-      var url = Uri.https('localhost:8000/ScottManager/departments');
+      var baseUrl = Uri.parse('http://10.0.2.2:8000/ScottManager/departments/');
       Response response;
       var obj = {
         "deptno": controllers[0].text,
@@ -57,12 +57,12 @@ class _DepartmentState extends State<Department> {
       };
       if (widget.action == "create") {
         response = await post(
-          url,
-          body: obj,
+          baseUrl,
+          body: jsonEncode(obj),
         );
       } else {
         response = await put(
-          url,
+          baseUrl,
           body: obj,
         );
       }

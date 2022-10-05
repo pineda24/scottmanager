@@ -86,8 +86,8 @@ class _DepartmentsListState extends State<DepartmentsList> {
         try {
           baseUrl = 'http://10.0.2.2:8000/ScottManager/departments/';
           for (var i = 0; i < listDept.length; i++) {
-            res = await get(
-                Uri.parse(baseUrl + '${listDept[i].deptno}/employees'));
+            res =
+                await get(Uri.parse('$baseUrl${listDept[i].deptno}/employees'));
             listDept[i].people = jsonDecode(res.body)["no_employees"];
           }
         } catch (e) {}
@@ -96,12 +96,4 @@ class _DepartmentsListState extends State<DepartmentsList> {
       }
     } catch (e) {}
   }
-
-  // Future<void> getData() async {
-  //   List<dynamic> aux = jsonDecode(prueba)["departments"];
-  //   listDept = [];
-  //   for (var i = 0; i < aux.length; i++) {
-  //     listDept.add(Dept.fromJson(aux[i]));
-  //   }
-  // }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:scottmanager/pages/departments/departments_list.dart';
 
 import '../pages/departments/department.dart';
@@ -76,6 +77,10 @@ class _MenuTabsState extends State<MenuTabs> {
                     color: Colors.white,
                   ),
                   onPressed: () {
+                    print("State changed");
+                    setState(() {
+                      
+                    });
                     if (index == 0) {
                       Navigator.push(
                         context,
