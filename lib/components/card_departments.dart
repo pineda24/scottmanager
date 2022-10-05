@@ -56,6 +56,15 @@ class _Card_departmentsState extends State<Card_departments> {
                 widget.dname,
                 style: Style.blackSmallBold,
               ),
+              Spacer(),
+              Text(
+                "No.${widget.deptno}",
+                style: Style.greySmallNormal,
+              ),
+              Text(
+                "No.${widget.deptno}",
+                style: Style.greySmallNormal,
+              ),
             ],
           ),
           SizedBox(height: 10),
@@ -64,8 +73,12 @@ class _Card_departmentsState extends State<Card_departments> {
               iconListCont(context),
               Spacer(),
               Text(
-                "${widget.loc}",
+                "No.",
                 style: Style.greySmallNormal,
+              ),
+              Text(
+                "${widget.deptno}",
+                style: Style.blackSmallBold,
               ),
             ],
           ),

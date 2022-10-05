@@ -160,17 +160,26 @@ class _EmployeeState extends State<Employee> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              textField(context, 'NUMERO DE EMPLEADO', controllers[0],
-                  TextInputType.text),
-              textField(context, 'NOMBRE', controllers[1], TextInputType.text),
-              textField(context, 'JOB', controllers[2], TextInputType.text),
-              textField(context, 'MGR', controllers[3], TextInputType.number),
+              textField(
+                  context,
+                  'NUMERO DE EMPLEADO',
+                  controllers[0],
+                  TextInputType.text,
+                  widget.action != "create"
+                      ? new AlwaysDisabledFocusNode()
+                      : null),
+              textField(
+                  context, 'NOMBRE', controllers[1], TextInputType.text, null),
+              textField(
+                  context, 'JOB', controllers[2], TextInputType.text, null),
+              textField(
+                  context, 'MGR', controllers[3], TextInputType.number, null),
               // textField(context, 'HIRE DATE', controllers[0]),
               dateMatch(context, 'HIRE DATE', controllers[4]),
-              textField(
-                  context, 'SALARY', controllers[5], TextInputType.number),
-              textField(
-                  context, 'COMMISSION', controllers[6], TextInputType.number),
+              textField(context, 'SALARY', controllers[5], TextInputType.number,
+                  null),
+              textField(context, 'COMMISSION', controllers[6],
+                  TextInputType.number, null),
               dropDownDept(context),
             ],
           ),
@@ -180,12 +189,17 @@ class _EmployeeState extends State<Employee> {
     );
   }
 
-  Widget textField(BuildContext context, String label,
-      TextEditingController controller, TextInputType textInputType) {
+  Widget textField(
+      BuildContext context,
+      String label,
+      TextEditingController controller,
+      TextInputType textInputType,
+      dynamic disable) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: TextFormField(
         controller: controller,
+        focusNode: disable,
         keyboardType: textInputType,
         decoration: InputDecoration(
           border: UnderlineInputBorder(),
@@ -277,4 +291,9 @@ class _EmployeeState extends State<Employee> {
       _date = DateTime.now();
     }
   }
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

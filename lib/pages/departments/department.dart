@@ -96,9 +96,15 @@ class _DepartmentState extends State<Department> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              textField(context, 'NUMERO DE DEPARTAMENTO', controllers[0]),
-              textField(context, 'DEPARTAMENTO', controllers[1]),
-              textField(context, 'LOCALIZACION', controllers[2]),
+              textField(
+                  context,
+                  'NUMERO DE DEPARTAMENTO',
+                  controllers[0],
+                  widget.action != "create"
+                      ? new AlwaysDisabledFocusNode()
+                      : null),
+              textField(context, 'DEPARTAMENTO', controllers[1], null),
+              textField(context, 'LOCALIZACION', controllers[2], null),
             ],
           ),
         ),
@@ -107,12 +113,13 @@ class _DepartmentState extends State<Department> {
     );
   }
 
-  Widget textField(
-      BuildContext context, String label, TextEditingController controller) {
+  Widget textField(BuildContext context, String label,
+      TextEditingController controller, dynamic disable) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: TextFormField(
         controller: controller,
+        focusNode: disable,
         decoration: InputDecoration(
           border: UnderlineInputBorder(),
           labelText: "${label}",
@@ -134,4 +141,9 @@ class _DepartmentState extends State<Department> {
       ),
     );
   }
+}
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
 }

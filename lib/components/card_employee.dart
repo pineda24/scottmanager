@@ -65,6 +65,15 @@ class _Card_employeeState extends State<Card_employee> {
                 widget.ename.toUpperCase(),
                 style: Style.blackSmallBold,
               ),
+              Spacer(),
+              Text(
+                "No.",
+                style: Style.greySmallNormal,
+              ),
+              Text(
+                "${widget.empno}",
+                style: Style.blackSmallBold,
+              ),
             ],
           ),
           SizedBox(height: 10),

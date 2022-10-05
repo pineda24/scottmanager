@@ -31,22 +31,19 @@ class _DepartmentsListState extends State<DepartmentsList> {
       itemBuilder: (context, index) {
         final item = listDept[index];
         return Dismissible(
-          // Each Dismissible must contain a Key. Keys allow Flutter to
-          // uniquely identify widgets.
           key: Key("${listDept[index].deptno}"),
-          // Provide a function that tells the app
-          // what to do after an item has been swiped away.
-          onDismissed: (direction) {
+          onDismissed: (direction) async {
             // Remove the item from the data source.
-            setState(() {
-              listDept.removeAt(index);
+            setState(() async {
+              await deleteDepartment(listDept[index].deptno);
+              // listDept.removeAt(index);
+              await getData();
             });
 
             // // Then show a snackbar.
             // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             //     content: Text('${listEmployees[index].namme} dismissed')));
           },
-          // Show a red background as the item is swiped away.
           background: Container(color: Colors.red),
           child: InkWell(
             onTap: () {
@@ -96,4 +93,32 @@ class _DepartmentsListState extends State<DepartmentsList> {
       }
     } catch (e) {}
   }
+<<<<<<< HEAD
+=======
+
+  Future<void> deleteDepartment(int id) async {
+    try {
+      var baseUrl = 'http://10.0.2.2:8000/ScottManager/departments';
+      Response res = await delete(
+        Uri.http(baseUrl),
+        headers: {"id": "${id}"},
+      );
+      if (res.statusCode == 200) {
+        print("Success Delete");
+      } else {
+        throw "Unable to retrieve delete.";
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  // Future<void> getData() async {
+  //   List<dynamic> aux = jsonDecode(prueba)["departments"];
+  //   listDept = [];
+  //   for (var i = 0; i < aux.length; i++) {
+  //     listDept.add(Dept.fromJson(aux[i]));
+  //   }
+  // }
+>>>>>>> 376b1076a45c93aa9ffe7b99fd346c125a8fb252
 }
