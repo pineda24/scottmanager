@@ -57,7 +57,7 @@ class _EmployeeState extends State<Employee> {
   void getData() async {
     try {
       Response res = await get(Uri.parse(
-          'http://10.0.2.2:8000/ScottManager/employees/${widget.empno}'));
+          'http://10.20.14.145:8000/ScottManager/employees/${widget.empno}'));
       if (res.statusCode == 200) {
         List<dynamic> emps = jsonDecode(res.body)['employees'];
         if (emps.length > 0) {
@@ -89,7 +89,8 @@ class _EmployeeState extends State<Employee> {
 
   void saveData() async {
     try {
-      var baseUrl = Uri.parse('http://10.0.2.2:8000/ScottManager/employees/');
+      var baseUrl =
+          Uri.parse('http://10.20.14.145:8000/ScottManager/employees/');
       var obj = {
         "empno": controllers[0].text,
         "ename": controllers[1].text,
@@ -152,7 +153,7 @@ class _EmployeeState extends State<Employee> {
   void getDept() async {
     try {
       Response res =
-          await get(Uri.http('10.0.2.2:8000/ScottManager/', 'departments'));
+          await get(Uri.http('10.20.14.145:8000/ScottManager/', 'departments'));
       if (res.statusCode == 200) {
         List<dynamic> aux = jsonDecode(res.body)["departments"];
         listDep = [];

@@ -73,7 +73,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
 
   Future<void> getData() async {
     try {
-      var baseUrl = 'http://10.0.2.2:8000/ScottManager/departments/';
+      var baseUrl = 'http://10.20.14.145:8000/ScottManager/departments/';
       Response res = await get(Uri.parse(baseUrl));
       if (res.statusCode == 200) {
         List<dynamic> aux = jsonDecode(res.body)["departments"];
@@ -82,7 +82,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
           listDept.add(Dept.fromJson(aux[i]));
         }
         try {
-          baseUrl = 'http://10.0.2.2:8000/ScottManager/departments/';
+          baseUrl = 'http://10.20.14.145:8000/ScottManager/departments/';
           for (var i = 0; i < listDept.length; i++) {
             res =
                 await get(Uri.parse('$baseUrl${listDept[i].deptno}/employees'));
@@ -103,7 +103,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
 
   Future<void> deleteDepartment(int id) async {
     try {
-      var baseUrl = 'http://10.0.2.2:8000/ScottManager/departments/';
+      var baseUrl = 'http://10.20.14.145:8000/ScottManager/departments/';
       Response res = await delete(Uri.parse('$baseUrl$id'));
       if (res.statusCode == 200) {
         if (jsonDecode(res.body)["message"] == "Success") {

@@ -27,7 +27,7 @@ class _EmployeeListState extends State<EmployeeList> {
 
   Future<void> getData() async {
     try {
-      var baseUrl = 'http://10.0.2.2:8000/ScottManager/employees';
+      var baseUrl = 'http://10.20.14.145:8000/ScottManager/employees';
       Response res = await get(Uri.parse(baseUrl));
       if (res.statusCode == 200) {
         List<dynamic> aux = jsonDecode(res.body)["employees"];
@@ -97,7 +97,7 @@ class _EmployeeListState extends State<EmployeeList> {
 
   Future<void> deleteEmployee(int id) async {
     try {
-      var baseUrl = 'http://10.0.2.2:8000/ScottManager/employees/';
+      var baseUrl = 'http://10.20.14.145:8000/ScottManager/employees/';
       Response res = await delete(Uri.parse('$baseUrl$id'));
       if (res.statusCode == 200) {
         if (jsonDecode(res.body)["message"] == "Success") {

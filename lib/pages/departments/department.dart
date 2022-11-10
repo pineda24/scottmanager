@@ -32,7 +32,7 @@ class _DepartmentState extends State<Department> {
   Future<void> getData() async {
     try {
       Response res = await get(Uri.parse(
-          'http://10.0.2.2:8000/ScottManager/departments/${widget.dpno}'));
+          'http://10.20.14.145:8000/ScottManager/departments/${widget.dpno}'));
       if (res.statusCode == 200) {
         List<dynamic> depts = jsonDecode(res.body)['departments'];
         if (depts.length > 0) {
@@ -51,7 +51,8 @@ class _DepartmentState extends State<Department> {
 
   Future<void> saveData() async {
     try {
-      var baseUrl = Uri.parse('http://10.0.2.2:8000/ScottManager/departments/');
+      var baseUrl =
+          Uri.parse('http://10.20.14.145:8000/ScottManager/departments/');
       Response response;
       var obj = {
         "deptno": controllers[0].text,
