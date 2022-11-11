@@ -27,65 +27,12 @@ class _DepartmentsListState extends State<DepartmentsList> {
 
   @override
   Widget build(BuildContext context) {
-    // return ListView.builder(
-    //   itemCount: listDept.length,
-    //   itemBuilder: (context, index) {
-    //     print(index);
-    //     final item = listDept[index];
-    //     return Dismissible(
-    //       key: Key("${listDept[index].deptno}"),
-    //       onDismissed: (direction) async {
-    //         // Remove the item from the data source.
-    //         setState(() async {
-    //           await deleteDepartment(listDept[index].deptno);
-    //           // listDept.removeAt(index);
-    //           await getData();
-    //         });
-    //       },
-    //       background: Container(color: Colors.red),
-    //       child: InkWell(
-    //         onTap: () {
-    //           Navigator.push(
-    //             context,
-    //             MaterialPageRoute(
-    //               builder: (context) => Department(
-    //                 action: "edit",
-    //                 dpno: listDept[index].deptno,
-    //               ),
-    //             ),
-    //           );
-    //         },
-    //         // child: Card_departments(
-    //         //   color: Colors.white,
-    //         //   deptno: "${listDept[index].deptno}",
-    //         //   dname: "${listDept[index].dname}",
-    //         //   people: "${0}",
-    //         //   loc: "${listDept[index].loc}",
-    //         // ),
-    //         child: Text("HOLAAAA"),
-    //       ),
-    //     );
-    //   },
-    // );
     return FutureBuilder<List<Dept>>(
       future: getData(),
       builder: (
         BuildContext context,
         AsyncSnapshot<List<Dept>> snapshot,
       ) {
-        // return snapshot.connectionState == ConnectionState.waiting
-        //     ? Text("NO FOUND")
-        //     : Column(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         mainAxisSize: MainAxisSize.min,
-        //         children: List.generate(
-        //           snapshot.data!.length,
-        //           (index) {
-        //             print("INDEX ${index}");
-        //             return Text("snapshot.data?[index]");
-        //           },
-        //         ),
-        //       );
         return snapshot.connectionState == ConnectionState.waiting
             ? Text("NO FOUND")
             : ListView.builder(
