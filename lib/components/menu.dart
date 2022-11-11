@@ -18,22 +18,25 @@ class _MenuTabsState extends State<MenuTabs> {
 
   @override
   Widget build(BuildContext context) {
+    int a = 8;
+    int b = 28;
+    int c = 21;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: MaterialColor(
-          0xFF3FA037,
+          0xFF40916c,
           {
-            50: Color.fromRGBO(136, 14, 79, .1),
-            100: Color.fromRGBO(136, 14, 79, .2),
-            200: Color.fromRGBO(136, 14, 79, .3),
-            300: Color.fromRGBO(136, 14, 79, .4),
-            400: Color.fromRGBO(136, 14, 79, .5),
-            500: Color.fromRGBO(136, 14, 79, .6),
-            600: Color.fromRGBO(136, 14, 79, .7),
-            700: Color.fromRGBO(136, 14, 79, .8),
-            800: Color.fromRGBO(136, 14, 79, .9),
-            900: Color.fromRGBO(136, 14, 79, 1),
+            50: Color.fromRGBO(a, b, c, .1),
+            100: Color.fromRGBO(a, b, c, .2),
+            200: Color.fromRGBO(a, b, c, .3),
+            300: Color.fromRGBO(a, b, c, .4),
+            400: Color.fromRGBO(a, b, c, .5),
+            500: Color.fromRGBO(a, b, c, .6),
+            600: Color.fromRGBO(a, b, c, .7),
+            700: Color.fromRGBO(a, b, c, .8),
+            800: Color.fromRGBO(a, b, c, .9),
+            900: Color.fromRGBO(a, b, c, 1),
           },
         ),
         primaryColor: Colors.black,
@@ -81,19 +84,21 @@ class _MenuTabsState extends State<MenuTabs> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Department(
-                                  action: "create",
-                                  dpno: -1,
-                                )),
+                          builder: (context) => Department(
+                            action: "create",
+                            dpno: -1,
+                          ),
+                        ),
                       );
                     } else {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Employee(
-                                  action: "create",
-                                  empno: -1,
-                                )),
+                          builder: (context) => Employee(
+                            action: "create",
+                            empno: -1,
+                          ),
+                        ),
                       );
                     }
                   },
