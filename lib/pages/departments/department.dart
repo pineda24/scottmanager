@@ -20,7 +20,7 @@ class Department extends StatefulWidget {
 class _DepartmentState extends State<Department> {
   List<TextEditingController> controllers =
       List.generate(3, (int index) => TextEditingController());
-  Dept department = new Dept(deptno: 0, dname: "", loc: "");
+  Dept department = new Dept(id: "", deptno: 0, dname: "", loc: "");
   List<String> atributes = ["deptno", "dname", "loc"];
 
   @override
@@ -31,16 +31,15 @@ class _DepartmentState extends State<Department> {
 
   Future<void> getData() async {
     try {
-      Response res = await get(Uri.parse(
-          'http://10.20.14.145:8000/ScottManager/departments/${widget.dpno}'));
+      Response res = await get(
+          Uri.parse('http://localhost:3000/departments/${widget.dpno}'));
+      print(res.statusCode);
       if (res.statusCode == 200) {
-        List<dynamic> depts = jsonDecode(res.body)['departments'];
-        if (depts.length > 0) {
-          department = Dept.fromJson(depts[0]);
-          controllers[0].text = department.deptno.toString();
-          controllers[1].text = department.dname.toString();
-          controllers[2].text = department.loc.toString();
-        }
+        Map<String, dynamic> depts = jsonDecode(res.body);
+        department = Dept.fromJson(depts);
+        controllers[0].text = department.deptno.toString();
+        controllers[1].text = department.dname.toString();
+        controllers[2].text = department.loc.toString();
       } else {
         throw "Unable to retrieve posts.";
       }
@@ -51,8 +50,7 @@ class _DepartmentState extends State<Department> {
 
   Future<void> saveData() async {
     try {
-      var baseUrl =
-          Uri.parse('http://10.20.14.145:8000/ScottManager/departments/');
+      var baseUrl = Uri.parse('http://localhost:3000/departments/');
       Response response;
       var obj = {
         "deptno": controllers[0].text,
@@ -77,24 +75,33 @@ class _DepartmentState extends State<Department> {
         }
       } else {
         var json_obj;
-        for (var i = 0; i < controllers.length; i++) {
-          json_obj = {"atribute": atributes[i], "value": controllers[i].text};
-          response = await put(
-            Uri.parse('$baseUrl${widget.dpno}'),
-            body: jsonEncode(json_obj),
-          );
-          if (response.statusCode == 200) {
-            if (jsonDecode(response.body)["message"] == "Success") {
-              print(jsonDecode(response.body)["message"]);
-            } else {
-              jsonDecode(response.body)["error"].forEach((err) {
-                print(err);
-              });
-            }
-          } else {
-            throw "Unable to retrieve put.";
-          }
-        }
+        // for (var i = 0; i < controllers.length; i++) {
+        //   json_obj = {"atribute": atributes[i], "value": controllers[i].text};
+        //   response = await put(
+        //     Uri.parse('$baseUrl${widget.dpno}'),
+        //     body: jsonEncode(json_obj),
+        //   );
+        //   if (response.statusCode == 200) {
+        //     if (jsonDecode(response.body)["message"] == "Success") {
+        //       print(jsonDecode(response.body)["message"]);
+        //     } else {
+        //       jsonDecode(response.body)["error"].forEach((err) {
+        //         print(err);
+        //       });
+        //     }
+        //   } else {
+        //     throw "Unable to retrieve put.";
+        //   }
+        // }
+        var obj = {
+          "deptno": controllers[0].text,
+          "dname": controllers[1].text,
+          "loc": controllers[2].text,
+        };
+        response = await put(
+          Uri.parse('$baseUrl${widget.dpno}'),
+          body: obj,
+        );
       }
       Navigator.pop(context);
     } catch (e) {
@@ -125,8 +132,8 @@ class _DepartmentState extends State<Department> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              textField(
-                  context, 'NUMERO DE DEPARTAMENTO', controllers[0], null),
+              textField(context, 'NUMERO DE DEPARTAMENTO', controllers[0],
+                  new AlwaysDisabledFocusNode()),
               textField(context, 'DEPARTAMENTO', controllers[1], null),
               textField(context, 'LOCALIZACION', controllers[2], null),
             ],

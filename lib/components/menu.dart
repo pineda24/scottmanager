@@ -22,7 +22,7 @@ class _MenuTabsState extends State<MenuTabs> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: MaterialColor(
-          0xFFe63946,
+          0xFF3FA037,
           {
             50: Color.fromRGBO(136, 14, 79, .1),
             100: Color.fromRGBO(136, 14, 79, .2),

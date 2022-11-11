@@ -25,7 +25,7 @@ class _EmployeeState extends State<Employee> {
   DateTime _date = DateTime.now();
   DateFormat outputFormat = DateFormat('yyyy-MM-dd');
   List<Dept> listDep = [];
-  Dept deptSelect = new Dept(deptno: 0, dname: "", loc: "");
+  Dept deptSelect = new Dept(id: "", deptno: 0, dname: "", loc: "");
   Emp employee = new Emp(
       empno: 0,
       ename: "ename",
