@@ -78,8 +78,7 @@ class _EmployeeListState extends State<EmployeeList> {
                   return Dismissible(
                     key: Key("${snapshot.data![index].id}"),
                     onDismissed: (direction) async {
-                      // Remove the item from the data source.
-                      // await deleteEmployee(snapshot.data![index].);
+                      await deleteEmployee(snapshot.data![index].empno);
                       setState(() {
                         // listDept.removeAt(index);
                         // await getData();

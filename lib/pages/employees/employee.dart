@@ -7,6 +7,7 @@ import 'package:scottmanager/models/employee.model.dart';
 
 import '../../components/button.dart';
 import '../../models/department.model.dart';
+import '../../models/employeeList.model.dart';
 import '../../style/style.dart';
 
 class Employee extends StatefulWidget {
@@ -25,16 +26,19 @@ class _EmployeeState extends State<Employee> {
   DateTime _date = DateTime.now();
   DateFormat outputFormat = DateFormat('yyyy-MM-dd');
   List<Dept> listDep = [];
-  Dept deptSelect = new Dept(id: "", deptno: 0, dname: "", loc: "");
+  // Dept deptSelect = new Dept(id: "", deptno: 0, dname: "", loc: "");
+  dynamic deptSelect = null;
+  dynamic employeeMgrSelect = null;
   Emp employee = new Emp(
-      empno: 0,
-      ename: "ename",
-      job: "",
-      mgr: 0,
+      comm: 0,
+      deptno: "",
+      empno: -1,
+      ename: "",
       hiredate: DateTime.now(),
-      sal: "",
-      comm: "",
-      deptno: 0);
+      id: "",
+      job: "",
+      mgr: "",
+      sal: 0);
   int dept = 0;
   List<String> atributes = [
     "empno",
@@ -54,53 +58,150 @@ class _EmployeeState extends State<Employee> {
     if (widget.action == "edit") getData();
   }
 
-  void getData() async {
+  Future<List<Dept>> getDataDept() async {
     try {
-      Response res = await get(Uri.parse(
-          'http://10.20.14.145:8000/ScottManager/employees/${widget.empno}'));
+      var baseUrl = 'http://localhost:3000/departments';
+      Response res = await get(Uri.parse(baseUrl));
       if (res.statusCode == 200) {
-        List<dynamic> emps = jsonDecode(res.body)['employees'];
-        if (emps.length > 0) {
-          employee = Emp.fromJson(emps[0]);
-          controllers[0].text = employee.empno.toString();
-          controllers[1].text = employee.ename.toString();
-          controllers[2].text = employee.job.toString();
-          controllers[3].text = employee.mgr.toString();
-          _date = DateTime.parse(employee.hiredate.toString());
-          controllers[4]
-            ..text = DateFormat.yMMMd().format(employee.hiredate)
-            ..selection = TextSelection.fromPosition(
-              TextPosition(
-                  offset: controllers[4].text.length,
-                  affinity: TextAffinity.upstream),
-            );
-          controllers[5].text = employee.sal.toString();
-          controllers[6].text = employee.comm.toString();
-          controllers[7].text = employee.deptno.toString();
-          // deptSelect.deptno = employee.deptno;
+        List<dynamic> aux = jsonDecode(res.body);
+        List<Dept> listDepart = [];
+        for (var i = 0; i < aux.length; i++) {
+          // print("AUX: ${aux[i]}");
+          Dept department = Dept.fromJson(aux[i]);
+          // if (i == 0) deptSelect = department;
+          department.noemployees = aux[i]["noemployees"];
+          listDepart.add(department);
         }
+        return listDepart;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      throw "Unable to retrieve posts.";
+    }
+  }
+
+  Future<List<EmployeeView>> getDataEmplyees() async {
+    try {
+      var baseUrl = 'http://localhost:3000/employees';
+      Response res = await get(Uri.parse(baseUrl));
+      if (res.statusCode == 200) {
+        List<dynamic> aux = jsonDecode(res.body);
+        List<EmployeeView> listempl = [];
+        listempl.add(
+          EmployeeView(
+            comm: null,
+            deptno: null,
+            hiredate: DateTime.now(),
+            empno: -1,
+            id: null,
+            ename: "",
+            job: "",
+            mgr: null,
+            nameDept: null,
+            sal: 0,
+          ),
+        );
+        for (var i = 0; i < aux.length; i++) {
+          EmployeeView emp = EmployeeView.fromJson(aux[i]);
+          // if (i == 0 && widget.empno != emp.empno) employeeMgrSelect = emp.id;
+          if (widget.empno != emp.empno) listempl.add(emp);
+        }
+        return listempl;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      throw "Unable to retrieve posts.";
+    }
+  }
+
+  Future<void> getData() async {
+    try {
+      Response res = await get(
+          Uri.parse('http://localhost:3000/employees/${widget.empno}'));
+      if (res.statusCode == 200) {
+        print(res.body);
+        Map<String, dynamic> depts = jsonDecode(res.body);
+
+        employee = Emp.fromJson(depts);
+        controllers[0].text = employee.empno.toString();
+        controllers[1].text = employee.ename.toString();
+        controllers[2].text = employee.job.toString();
+        // controllers[3].text = employee.mgr.toString();
+        _date = DateTime.parse(employee.hiredate.toString());
+        controllers[4]
+          ..text = DateFormat.yMMMd().format(employee.hiredate)
+          ..selection = TextSelection.fromPosition(
+            TextPosition(
+                offset: controllers[4].text.length,
+                affinity: TextAffinity.upstream),
+          );
+        employeeMgrSelect =
+            employee.mgr != null ? employee.mgr.toString() : null;
+
+        deptSelect = employee.deptno.toString();
+        controllers[5].text = employee.sal.toString();
+        controllers[6].text = employee.comm.toString();
+        controllers[7].text = employee.deptno.toString();
+        //       //   // deptSelect.deptno = employee.deptno;
       } else {
         throw "Unable to retrieve posts.";
       }
     } catch (e) {
-      print(e);
+      throw "Unable to retrieve posts.";
     }
   }
 
+  // void getData() async {
+  //   try {
+  //     Response res = await get(
+  //         Uri.parse('http://localhost:3000/employees${widget.empno}'));
+  //     print(res.statusCode);
+  //     if (res.statusCode == 200) {
+  //       List<dynamic> emps = jsonDecode(res.body);
+  //       print(res.body);
+  //       // if (emps.length > 0) {
+  //       //   employee = Emp.fromJson(emps[0]);
+  //       //   controllers[0].text = employee.empno.toString();
+  //       //   controllers[1].text = employee.ename.toString();
+  //       //   controllers[2].text = employee.job.toString();
+  //       //   controllers[3].text = employee.mgr.toString();
+  //       //   _date = DateTime.parse(employee.hiredate.toString());
+  //       //   controllers[4]
+  //       //     ..text = DateFormat.yMMMd().format(employee.hiredate)
+  //       //     ..selection = TextSelection.fromPosition(
+  //       //       TextPosition(
+  //       //           offset: controllers[4].text.length,
+  //       //           affinity: TextAffinity.upstream),
+  //       //     );
+  //       //   controllers[5].text = employee.sal.toString();
+  //       //   controllers[6].text = employee.comm.toString();
+  //       //   controllers[7].text = employee.deptno.toString();
+  //       //   // deptSelect.deptno = employee.deptno;
+  //       // }
+  //     } else {
+  //       throw "Unable to retrieve posts.";
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
   void saveData() async {
     try {
-      var baseUrl =
-          Uri.parse('http://10.20.14.145:8000/ScottManager/employees/');
+      var baseUrl = Uri.parse('http://localhost:3000/employees/');
       var obj = {
         "empno": controllers[0].text,
         "ename": controllers[1].text,
         "job": controllers[2].text,
-        "mgr": controllers[3].text,
+        // "mgr": employeeMgrSelect,
         "hiredate": outputFormat.format(_date).toString(),
         "sal": controllers[5].text,
         "comm": controllers[6].text,
-        "deptno": controllers[7].text,
+        "deptno": deptSelect.id,
       };
+      if (employeeMgrSelect != null) obj["mgr"] = employeeMgrSelect;
       Response response;
       if (widget.action == "create") {
         response = await post(
@@ -108,46 +209,52 @@ class _EmployeeState extends State<Employee> {
           body: jsonEncode(obj),
         );
         if (response.statusCode == 200) {
-          if (jsonDecode(response.body)["message"] == "Success") {
-            print(jsonDecode(response.body)["message"]);
-          } else {
-            jsonDecode(response.body)["error"].forEach((err) {
-              print(err);
-            });
-          }
+          // if (jsonDecode(response.body)["message"] == "Success") {
+          //   print(jsonDecode(response.body)["message"]);
+          // } else {
+          //   jsonDecode(response.body)["error"].forEach((err) {
+          //     print(err);
+          //   });
+          // }
         } else {
           throw "Unable to retrieve post.";
         }
       } else {
-        for (var i = 0; i < controllers.length; i++) {
-          var json_obj;
-          if (atributes[i] == "hiredate") {
-            json_obj = {
-              "atribute": atributes[i],
-              "value": outputFormat.format(_date).toString()
-            };
-          } else {
-            json_obj = {"atribute": atributes[i], "value": controllers[i].text};
-          }
-          response = await put(
-            Uri.parse('$baseUrl${widget.empno}'),
-            body: jsonEncode(json_obj),
-          );
-          if (response.statusCode == 200) {
-            if (jsonDecode(response.body)["message"] == "Success") {
-              print(jsonDecode(response.body)["message"]);
-            } else {
-              jsonDecode(response.body)["error"].forEach((err) {
-                print(err);
-              });
-            }
-          } else {
-            throw "Unable to retrieve put.";
-          }
-        }
+        // for (var i = 0; i < controllers.length; i++) {
+        //   var json_obj;
+        //   if (atributes[i] == "hiredate") {
+        //     json_obj = {
+        //       "atribute": atributes[i],
+        //       "value": outputFormat.format(_date).toString()
+        //     };
+        //   } else {
+        //     json_obj = {"atribute": atributes[i], "value": controllers[i].text};
+        //   }
+        //   response = await put(
+        //     Uri.parse('$baseUrl${widget.empno}'),
+        //     body: jsonEncode(json_obj),
+        //   );
+        //   if (response.statusCode == 200) {
+        //     if (jsonDecode(response.body)["message"] == "Success") {
+        //       print(jsonDecode(response.body)["message"]);
+        //     } else {
+        //       jsonDecode(response.body)["error"].forEach((err) {
+        //         print(err);
+        //       });
+        //     }
+        //   } else {
+        //     throw "Unable to retrieve put.";
+        //   }
+        // }
+        response = await put(
+          Uri.parse('$baseUrl${widget.empno}'),
+          body: obj,
+        );
       }
       Navigator.pop(context);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   void getDept() async {
@@ -200,17 +307,18 @@ class _EmployeeState extends State<Employee> {
                   context, 'NOMBRE', controllers[1], TextInputType.text, null),
               textField(
                   context, 'JOB', controllers[2], TextInputType.text, null),
-              textField(
-                  context, 'MGR', controllers[3], TextInputType.number, null),
+              // textField(
+              //     context, 'MGR', controllers[3], TextInputType.number, null),
+              dropDownEmpl(context),
               // textField(context, 'HIRE DATE', controllers[0]),
               dateMatch(context, 'HIRE DATE', controllers[4]),
               textField(context, 'SALARY', controllers[5], TextInputType.number,
                   null),
               textField(context, 'COMMISSION', controllers[6],
                   TextInputType.number, null),
-              // dropDownDept(context),
-              textField(context, 'DEPARTMENT', controllers[7],
-                  TextInputType.number, null),
+              dropDownDept(context),
+              // textField(context, 'DEPARTMENT', controllers[7],
+              //     TextInputType.number, null),
             ],
           ),
         ),
@@ -254,24 +362,80 @@ class _EmployeeState extends State<Employee> {
   Widget dropDownDept(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      child: DropdownButtonFormField(
-        isExpanded: true,
-        value: deptSelect.dname,
-        validator: (value) {},
-        decoration: InputDecoration(
-          labelText: "Departamento",
-          contentPadding:
-              EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        ),
-        style: Style.formTextLight,
-        items: listDep.map<DropdownMenuItem<String>>((e) {
-          return DropdownMenuItem(
-              child: Text('${e.dname}'), value: e.dname.toString());
-        }).toList(),
-        onChanged: (value) {
-          for (var i = 0; i < listDep.length; i++) {
-            if (listDep[i].dname == value) deptSelect = listDep[i];
-          }
+      child: FutureBuilder<List<Dept>>(
+        future: getDataDept(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<List<Dept>> snapshot,
+        ) {
+          return snapshot.connectionState == ConnectionState.waiting
+              ? Text("NO FOUND")
+              : DropdownButtonFormField(
+                  isExpanded: true,
+                  value: deptSelect,
+                  validator: (value) {},
+                  decoration: InputDecoration(
+                    labelText: "Departamento",
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  ),
+                  style: Style.formTextLight,
+                  items: snapshot.data?.map<DropdownMenuItem<String>>((e) {
+                    return DropdownMenuItem(
+                        child: Text('${e.dname}'), value: e.id.toString());
+                  }).toList(),
+                  onChanged: (value) {
+                    print(value);
+                    for (var i = 0; i < snapshot.data!.length; i++) {
+                      if (snapshot.data![i].id == value)
+                        deptSelect = snapshot.data![i].id;
+                    }
+                  },
+                );
+        },
+      ),
+    );
+  }
+
+  Widget dropDownEmpl(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: FutureBuilder<List<EmployeeView>>(
+        future: getDataEmplyees(),
+        builder: (
+          BuildContext context,
+          AsyncSnapshot<List<EmployeeView>> snapshot,
+        ) {
+          return snapshot.connectionState == ConnectionState.waiting
+              ? Text("NO FOUND")
+              : DropdownButtonFormField(
+                  isExpanded: true,
+                  value: employeeMgrSelect,
+                  validator: (value) {},
+                  decoration: InputDecoration(
+                    labelText: "MGR",
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  ),
+                  style: Style.formTextLight,
+                  items: snapshot.data?.map<DropdownMenuItem<String>>((e) {
+                    return DropdownMenuItem(
+                        child: Text(e.id == null
+                            ? "Ningun manager"
+                            : 'No.${e.empno} ${e.ename}'),
+                        value: e.id != null ? e.id.toString() : null);
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      for (var i = 0; i < snapshot.data!.length; i++) {
+                        if (snapshot.data![i].id == value)
+                          employeeMgrSelect = snapshot.data![i].id;
+                      }
+                    } else {
+                      employeeMgrSelect = null;
+                    }
+                  },
+                );
         },
       ),
     );

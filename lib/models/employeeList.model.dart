@@ -25,7 +25,7 @@ class EmployeeView {
     required this.nameDept,
   });
 
-  String id;
+  dynamic id;
   int empno;
   String ename;
   String job;
