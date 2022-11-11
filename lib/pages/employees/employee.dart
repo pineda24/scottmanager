@@ -199,26 +199,26 @@ class _EmployeeState extends State<Employee> {
         "hiredate": outputFormat.format(_date).toString(),
         "sal": controllers[5].text,
         "comm": controllers[6].text,
-        "deptno": deptSelect.id,
+        "deptno": deptSelect,
       };
       if (employeeMgrSelect != null) obj["mgr"] = employeeMgrSelect;
       Response response;
       if (widget.action == "create") {
         response = await post(
           baseUrl,
-          body: jsonEncode(obj),
+          body: obj,
         );
-        if (response.statusCode == 200) {
-          // if (jsonDecode(response.body)["message"] == "Success") {
-          //   print(jsonDecode(response.body)["message"]);
-          // } else {
-          //   jsonDecode(response.body)["error"].forEach((err) {
-          //     print(err);
-          //   });
-          // }
-        } else {
-          throw "Unable to retrieve post.";
-        }
+        // if (response.statusCode == 200) {
+        //   // if (jsonDecode(response.body)["message"] == "Success") {
+        //   //   print(jsonDecode(response.body)["message"]);
+        //   // } else {
+        //   //   jsonDecode(response.body)["error"].forEach((err) {
+        //   //     print(err);
+        //   //   });
+        //   // }
+        // } else {
+        //   throw "Unable to retrieve post.";
+        // }
       } else {
         // for (var i = 0; i < controllers.length; i++) {
         //   var json_obj;
@@ -251,10 +251,10 @@ class _EmployeeState extends State<Employee> {
           body: obj,
         );
       }
-      Navigator.pop(context);
     } catch (e) {
       print(e);
     }
+    Navigator.pop(context);
   }
 
   void getDept() async {

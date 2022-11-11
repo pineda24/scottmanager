@@ -8,7 +8,7 @@ class Style {
   static const Color secundaryColor = Color(0xFFffffff);
   // static const Color primaryColor = Color(0xFFFFFFFF);
   // static const Color primaryColorBold = Color(0xFF590d22);
-  static const Color primaryColorBold = Color(0xFFe63946);
+  static const Color primaryColorBold = Color(0xFF40916c);
 
   static const Color colorSelect = Color(0xFF95d5b2);
 

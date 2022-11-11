@@ -16,19 +16,25 @@ class DepartmentsList extends StatefulWidget {
 
 class _DepartmentsListState extends State<DepartmentsList> {
   List<Dept> listDept = [];
+  late Future<List<Dept>> _myData;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     print("GET DATA DEPARTMENTS");
+    init();
     getData();
+  }
+
+  void init() async {
+    _myData = getData();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Dept>>(
-      future: getData(),
+      future: _myData,
       builder: (
         BuildContext context,
         AsyncSnapshot<List<Dept>> snapshot,
@@ -45,9 +51,9 @@ class _DepartmentsListState extends State<DepartmentsList> {
                     onDismissed: (direction) async {
                       // Remove the item from the data source.
                       await deleteDepartment(snapshot.data![index].deptno);
+
                       setState(() {
-                        // listDept.removeAt(index);
-                        // await getData();
+                        _myData = getData();
                       });
                     },
                     background: Container(color: Colors.red),

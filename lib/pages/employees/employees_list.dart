@@ -26,22 +26,6 @@ class _EmployeeListState extends State<EmployeeList> {
     getData();
   }
 
-  // Future<void> getData() async {
-  //   try {
-  //     var baseUrl = 'http://localhost:3000/employees';
-  //     Response res = await get(Uri.parse(baseUrl));
-  //     if (res.statusCode == 200) {
-  //       List<dynamic> aux = jsonDecode(res.body)["employees"];
-  //       listEmployees = [];
-  //       for (var i = 0; i < aux.length; i++) {
-  //         listEmployees.add(Emp.fromJson(aux[i]));
-  //       }
-  //     } else {
-  //       throw "Unable to retrieve posts.";
-  //     }
-  //   } catch (e) {}
-  // }
-
   Future<List<EmployeeView>> getData() async {
     try {
       var baseUrl = 'http://localhost:3000/employees';
@@ -79,10 +63,7 @@ class _EmployeeListState extends State<EmployeeList> {
                     key: Key("${snapshot.data![index].id}"),
                     onDismissed: (direction) async {
                       await deleteEmployee(snapshot.data![index].empno);
-                      setState(() {
-                        // listDept.removeAt(index);
-                        // await getData();
-                      });
+                      setState(() {});
                     },
                     background: Container(color: Colors.red),
                     child: InkWell(
