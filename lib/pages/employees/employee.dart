@@ -68,7 +68,7 @@ class _EmployeeState extends State<Employee> {
         for (var i = 0; i < aux.length; i++) {
           // print("AUX: ${aux[i]}");
           Dept department = Dept.fromJson(aux[i]);
-          // if (i == 0) deptSelect = department;
+          if (i == 0 && deptSelect == null) deptSelect = department.id;
           department.noemployees = aux[i]["noemployees"];
           listDepart.add(department);
         }
@@ -142,9 +142,11 @@ class _EmployeeState extends State<Employee> {
 
         deptSelect = employee.deptno.toString();
         controllers[5].text = employee.sal.toString();
-        controllers[6].text = employee.comm.toString();
+        controllers[6].text =
+            employee.comm != null ? employee.comm.toString() : "";
         controllers[7].text = employee.deptno.toString();
         //       //   // deptSelect.deptno = employee.deptno;
+        print("COMM: ${employee.comm}");
       } else {
         throw "Unable to retrieve posts.";
       }
@@ -198,10 +200,11 @@ class _EmployeeState extends State<Employee> {
         // "mgr": employeeMgrSelect,
         "hiredate": outputFormat.format(_date).toString(),
         "sal": controllers[5].text,
-        "comm": controllers[6].text,
+        // "comm": null,
         "deptno": deptSelect,
       };
       if (employeeMgrSelect != null) obj["mgr"] = employeeMgrSelect;
+      if (controllers[6].text.isNotEmpty) obj["comm"] = controllers[6].text;
       Response response;
       if (widget.action == "create") {
         response = await post(
@@ -252,7 +255,8 @@ class _EmployeeState extends State<Employee> {
         );
       }
     } catch (e) {
-      print(e);
+      print("ERROR -> ${e}");
+      throw "Error insert or update";
     }
     Navigator.pop(context);
   }
