@@ -60,19 +60,19 @@ class _DepartmentState extends State<Department> {
       if (widget.action == "create") {
         response = await post(
           baseUrl,
-          body: jsonEncode(obj),
+          body: obj,
         );
-        if (response.statusCode == 200) {
-          if (jsonDecode(response.body)["message"] == "Success") {
-            print(jsonDecode(response.body)["message"]);
-          } else {
-            jsonDecode(response.body)["error"].forEach((err) {
-              print(err);
-            });
-          }
-        } else {
-          throw "Unable to retrieve post.";
-        }
+        // if (response.statusCode == 200) {
+        //   if (jsonDecode(response.body)["message"] == "Success") {
+        //     print(jsonDecode(response.body)["message"]);
+        //   } else {
+        //     jsonDecode(response.body)["error"].forEach((err) {
+        //       print(err);
+        //     });
+        //   }
+        // } else {
+        //   throw "Unable to retrieve post.";
+        // }
       } else {
         var json_obj;
         // for (var i = 0; i < controllers.length; i++) {
@@ -132,8 +132,13 @@ class _DepartmentState extends State<Department> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              textField(context, 'NUMERO DE DEPARTAMENTO', controllers[0],
-                  new AlwaysDisabledFocusNode()),
+              textField(
+                  context,
+                  'NUMERO DE DEPARTAMENTO',
+                  controllers[0],
+                  (widget.action != "create")
+                      ? new AlwaysDisabledFocusNode()
+                      : null),
               textField(context, 'DEPARTAMENTO', controllers[1], null),
               textField(context, 'LOCALIZACION', controllers[2], null),
             ],
