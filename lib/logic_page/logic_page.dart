@@ -18,9 +18,6 @@ class _LogicScreenState extends State<LogicScreen> {
   }
 
   void _determineFirstPage(context) async {
-    // Navigator.of(context).pushNamedAndRemoveUntil(
-    //     NavigationRoute, (Route<dynamic> route) => false);
-    print("HOLA");
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => MenuTabs()),
@@ -33,7 +30,7 @@ class _LogicScreenState extends State<LogicScreen> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(48.0),
-          child: Text("JAJAJA"),
+          child: Text("Nothing to show here..."),
         ),
       ),
     );

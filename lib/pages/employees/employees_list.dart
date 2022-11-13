@@ -28,7 +28,7 @@ class _EmployeeListState extends State<EmployeeList> {
 
   Future<List<EmployeeView>> getData() async {
     try {
-      var baseUrl = 'http://localhost:3000/employees';
+      var baseUrl = 'http://10.0.2.2:3000/employees';
       Response res = await get(Uri.parse(baseUrl));
       if (res.statusCode == 200) {
         List<dynamic> aux = jsonDecode(res.body);

@@ -32,7 +32,7 @@ class _DepartmentState extends State<Department> {
   Future<void> getData() async {
     try {
       Response res = await get(
-          Uri.parse('http://localhost:3000/departments/${widget.dpno}'));
+          Uri.parse('http://10.0.2.2:3000/departments/${widget.dpno}'));
       print(res.statusCode);
       if (res.statusCode == 200) {
         Map<String, dynamic> depts = jsonDecode(res.body);
@@ -50,7 +50,7 @@ class _DepartmentState extends State<Department> {
 
   Future<void> saveData() async {
     try {
-      var baseUrl = Uri.parse('http://localhost:3000/departments/');
+      var baseUrl = Uri.parse('http://10.0.2.2:3000/departments/');
       Response response;
       var obj = {
         "deptno": controllers[0].text,
