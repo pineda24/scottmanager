@@ -22,7 +22,6 @@ class _DepartmentsListState extends State<DepartmentsList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("GET DATA DEPARTMENTS");
     init();
     getData();
   }
@@ -110,16 +109,9 @@ class _DepartmentsListState extends State<DepartmentsList> {
     try {
       var baseUrl = 'http://10.0.2.2:3000/departments/';
       Response res = await delete(Uri.parse('$baseUrl$id'));
-      if (res.statusCode == 200) {
-        // if (jsonDecode(res.body)["message"] == "Success") {
-        //   print(jsonDecode(res.body)["message"]);
-        // } else {
-        //   jsonDecode(res.body)["error"].forEach((err) {
-        //     print(err);
-        //   });
-        // }
-      } else {
-        throw "Unable to retrieve delete.";
+      if (res.statusCode == 400 || res.statusCode == 500) {
+        print('Unable to delete department.');
+        print('Error: ${jsonDecode(res.body)["message"]}');
       }
     } catch (e) {
       print(e);

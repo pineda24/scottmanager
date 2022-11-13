@@ -63,7 +63,9 @@ class _EmployeeListState extends State<EmployeeList> {
                     key: Key("${snapshot.data![index].id}"),
                     onDismissed: (direction) async {
                       await deleteEmployee(snapshot.data![index].empno);
-                      setState(() {});
+                      setState(() {
+                        getData();
+                      });
                     },
                     background: Container(color: Colors.red),
                     child: InkWell(
@@ -100,18 +102,11 @@ class _EmployeeListState extends State<EmployeeList> {
 
   Future<void> deleteEmployee(int id) async {
     try {
-      var baseUrl = 'http://10.20.14.145:8000/ScottManager/employees/';
+      var baseUrl = 'http://10.0.2.2:3000/employees/';
       Response res = await delete(Uri.parse('$baseUrl$id'));
-      if (res.statusCode == 200) {
-        if (jsonDecode(res.body)["message"] == "Success") {
-          print(jsonDecode(res.body)["message"]);
-        } else {
-          jsonDecode(res.body)["error"].forEach((err) {
-            print(err);
-          });
-        }
-      } else {
-        throw "Unable to retrieve delete.";
+      if (res.statusCode == 400 || res.statusCode == 500) {
+        print('Unable to delete employee.');
+        print('Error: ${jsonDecode(res.body)["message"]}');
       }
     } catch (e) {
       print(e);

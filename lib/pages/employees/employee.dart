@@ -155,41 +155,6 @@ class _EmployeeState extends State<Employee> {
     }
   }
 
-  // void getData() async {
-  //   try {
-  //     Response res = await get(
-  //         Uri.parse('http://10.0.2.2:3000/employees${widget.empno}'));
-  //     print(res.statusCode);
-  //     if (res.statusCode == 200) {
-  //       List<dynamic> emps = jsonDecode(res.body);
-  //       print(res.body);
-  //       // if (emps.length > 0) {
-  //       //   employee = Emp.fromJson(emps[0]);
-  //       //   controllers[0].text = employee.empno.toString();
-  //       //   controllers[1].text = employee.ename.toString();
-  //       //   controllers[2].text = employee.job.toString();
-  //       //   controllers[3].text = employee.mgr.toString();
-  //       //   _date = DateTime.parse(employee.hiredate.toString());
-  //       //   controllers[4]
-  //       //     ..text = DateFormat.yMMMd().format(employee.hiredate)
-  //       //     ..selection = TextSelection.fromPosition(
-  //       //       TextPosition(
-  //       //           offset: controllers[4].text.length,
-  //       //           affinity: TextAffinity.upstream),
-  //       //     );
-  //       //   controllers[5].text = employee.sal.toString();
-  //       //   controllers[6].text = employee.comm.toString();
-  //       //   controllers[7].text = employee.deptno.toString();
-  //       //   // deptSelect.deptno = employee.deptno;
-  //       // }
-  //     } else {
-  //       throw "Unable to retrieve posts.";
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   void saveData() async {
     try {
       var baseUrl = Uri.parse('http://10.0.2.2:3000/employees/');
@@ -211,54 +176,26 @@ class _EmployeeState extends State<Employee> {
           baseUrl,
           body: obj,
         );
-        // if (response.statusCode == 200) {
-        //   // if (jsonDecode(response.body)["message"] == "Success") {
-        //   //   print(jsonDecode(response.body)["message"]);
-        //   // } else {
-        //   //   jsonDecode(response.body)["error"].forEach((err) {
-        //   //     print(err);
-        //   //   });
-        //   // }
-        // } else {
-        //   throw "Unable to retrieve post.";
-        // }
       } else {
-        // for (var i = 0; i < controllers.length; i++) {
-        //   var json_obj;
-        //   if (atributes[i] == "hiredate") {
-        //     json_obj = {
-        //       "atribute": atributes[i],
-        //       "value": outputFormat.format(_date).toString()
-        //     };
-        //   } else {
-        //     json_obj = {"atribute": atributes[i], "value": controllers[i].text};
-        //   }
-        //   response = await put(
-        //     Uri.parse('$baseUrl${widget.empno}'),
-        //     body: jsonEncode(json_obj),
-        //   );
-        //   if (response.statusCode == 200) {
-        //     if (jsonDecode(response.body)["message"] == "Success") {
-        //       print(jsonDecode(response.body)["message"]);
-        //     } else {
-        //       jsonDecode(response.body)["error"].forEach((err) {
-        //         print(err);
-        //       });
-        //     }
-        //   } else {
-        //     throw "Unable to retrieve put.";
-        //   }
-        // }
         response = await put(
           Uri.parse('$baseUrl${widget.empno}'),
           body: obj,
         );
       }
+      if (response.body.contains("errors")) {
+        print('Unable to create/update employee.');
+        print(jsonDecode(response.body)["message"]);
+      } else if (response.body.contains("code") && jsonDecode(response.body)["code"] == 11000) {
+        print('Unable to create/update employee.');
+        print('Error: Key already exists');
+      } else if (response.statusCode == 500) {
+        print('Unable to create/update employee.');
+        print('Error: ${jsonDecode(response.body)["message"]}');
+      }
+      Navigator.pop(context);
     } catch (e) {
-      print("ERROR -> ${e}");
-      throw "Error insert or update";
+      print(e);
     }
-    Navigator.pop(context);
   }
 
   void getDept() async {

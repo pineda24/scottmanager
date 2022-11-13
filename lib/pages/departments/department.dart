@@ -62,37 +62,8 @@ class _DepartmentState extends State<Department> {
           baseUrl,
           body: obj,
         );
-        // if (response.statusCode == 200) {
-        //   if (jsonDecode(response.body)["message"] == "Success") {
-        //     print(jsonDecode(response.body)["message"]);
-        //   } else {
-        //     jsonDecode(response.body)["error"].forEach((err) {
-        //       print(err);
-        //     });
-        //   }
-        // } else {
-        //   throw "Unable to retrieve post.";
-        // }
       } else {
         var json_obj;
-        // for (var i = 0; i < controllers.length; i++) {
-        //   json_obj = {"atribute": atributes[i], "value": controllers[i].text};
-        //   response = await put(
-        //     Uri.parse('$baseUrl${widget.dpno}'),
-        //     body: jsonEncode(json_obj),
-        //   );
-        //   if (response.statusCode == 200) {
-        //     if (jsonDecode(response.body)["message"] == "Success") {
-        //       print(jsonDecode(response.body)["message"]);
-        //     } else {
-        //       jsonDecode(response.body)["error"].forEach((err) {
-        //         print(err);
-        //       });
-        //     }
-        //   } else {
-        //     throw "Unable to retrieve put.";
-        //   }
-        // }
         var obj = {
           "deptno": controllers[0].text,
           "dname": controllers[1].text,
@@ -102,6 +73,16 @@ class _DepartmentState extends State<Department> {
           Uri.parse('$baseUrl${widget.dpno}'),
           body: obj,
         );
+      }
+      if (response.body.contains("errors")) {
+        print('Unable to create/update department.');
+        print(jsonDecode(response.body)["message"]);
+      } else if (response.body.contains("code") && jsonDecode(response.body)["code"] == 11000) {
+        print('Unable to create/update department.');
+        print('Error: Key already exists');
+      } else if (response.statusCode == 500) {
+        print('Unable to create/update department.');
+        print('Error: ${jsonDecode(response.body)["message"]}');
       }
       Navigator.pop(context);
     } catch (e) {
@@ -136,11 +117,12 @@ class _DepartmentState extends State<Department> {
                   context,
                   'NUMERO DE DEPARTAMENTO',
                   controllers[0],
+                  TextInputType.number,
                   (widget.action != "create")
                       ? new AlwaysDisabledFocusNode()
                       : null),
-              textField(context, 'DEPARTAMENTO', controllers[1], null),
-              textField(context, 'LOCALIZACION', controllers[2], null),
+              textField(context, 'DEPARTAMENTO', controllers[1], TextInputType.text, null),
+              textField(context, 'LOCALIZACION', controllers[2], TextInputType.text, null),
             ],
           ),
         ),
@@ -150,12 +132,13 @@ class _DepartmentState extends State<Department> {
   }
 
   Widget textField(BuildContext context, String label,
-      TextEditingController controller, dynamic disable) {
+      TextEditingController controller, TextInputType type, dynamic disable) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: TextFormField(
         controller: controller,
         focusNode: disable,
+        keyboardType: type,
         decoration: InputDecoration(
           border: UnderlineInputBorder(),
           labelText: "${label}",
