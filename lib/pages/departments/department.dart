@@ -32,7 +32,7 @@ class _DepartmentState extends State<Department> {
   Future<void> getData() async {
     try {
       Response res = await get(
-          Uri.parse('http://10.0.2.2:3000/departments/${widget.dpno}'));
+          Uri.parse('http://localhost:3000/departments/${widget.dpno}'));
       print(res.statusCode);
       if (res.statusCode == 200) {
         Map<String, dynamic> depts = jsonDecode(res.body);
@@ -50,7 +50,7 @@ class _DepartmentState extends State<Department> {
 
   Future<void> saveData() async {
     try {
-      var baseUrl = Uri.parse('http://10.0.2.2:3000/departments/');
+      var baseUrl = Uri.parse('http://localhost:3000/departments/');
       Response response;
       var obj = {
         "deptno": controllers[0].text,
@@ -77,7 +77,8 @@ class _DepartmentState extends State<Department> {
       if (response.body.contains("errors")) {
         print('Unable to create/update department.');
         print(jsonDecode(response.body)["message"]);
-      } else if (response.body.contains("code") && jsonDecode(response.body)["code"] == 11000) {
+      } else if (response.body.contains("code") &&
+          jsonDecode(response.body)["code"] == 11000) {
         print('Unable to create/update department.');
         print('Error: Key already exists');
       } else if (response.statusCode == 500) {
@@ -121,8 +122,10 @@ class _DepartmentState extends State<Department> {
                   (widget.action != "create")
                       ? new AlwaysDisabledFocusNode()
                       : null),
-              textField(context, 'DEPARTAMENTO', controllers[1], TextInputType.text, null),
-              textField(context, 'LOCALIZACION', controllers[2], TextInputType.text, null),
+              textField(context, 'DEPARTAMENTO', controllers[1],
+                  TextInputType.text, null),
+              textField(context, 'LOCALIZACION', controllers[2],
+                  TextInputType.text, null),
             ],
           ),
         ),

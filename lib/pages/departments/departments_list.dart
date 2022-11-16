@@ -85,7 +85,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
 
   Future<List<Dept>> getData() async {
     try {
-      var baseUrl = 'http://10.0.2.2:3000/departments';
+      var baseUrl = 'http://localhost:3000/departments';
       Response res = await get(Uri.parse(baseUrl));
       if (res.statusCode == 200) {
         List<dynamic> aux = jsonDecode(res.body);
@@ -107,7 +107,7 @@ class _DepartmentsListState extends State<DepartmentsList> {
 
   Future<void> deleteDepartment(int id) async {
     try {
-      var baseUrl = 'http://10.0.2.2:3000/departments/';
+      var baseUrl = 'http://localhost:3000/departments/';
       Response res = await delete(Uri.parse('$baseUrl$id'));
       if (res.statusCode == 400 || res.statusCode == 500) {
         print('Unable to delete department.');
